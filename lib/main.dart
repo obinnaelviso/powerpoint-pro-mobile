@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:powerpoint_pro/view_models/auth_view_model.dart';
+import 'package:powerpoint_pro/view_models/categories_view_model.dart';
+import 'package:powerpoint_pro/view_models/packages_view_model.dart';
+import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
 import 'package:powerpoint_pro/views/auth/login_screen.dart';
 import 'package:powerpoint_pro/views/auth/registration_screen.dart';
 import 'package:powerpoint_pro/views/user/user_create_form_screen.dart';
 import 'package:powerpoint_pro/views/user/user_main_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
+        ChangeNotifierProvider(create: (context) => RequestFormViewModel()),
+        ChangeNotifierProvider(create: (context) => PackagesViewModel()),
+        ChangeNotifierProvider(create: (context) => CategoriesViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -26,19 +31,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String? token;
-
-  void setToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    token = prefs.getString("token");
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setToken();
-  } // This widget is the root of your application.
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -73,8 +65,7 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
-        initialRoute:
-            (token == null) ? LoginScreen.route : UserMainScreen.route,
+        initialRoute: LoginScreen.route,
         routes: {
           LoginScreen.route: (context) => LoginScreen(),
           RegistrationScreen.route: (context) => RegistrationScreen(),

@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
+import 'package:provider/provider.dart';
 
 class PaymentModal extends StatefulWidget {
-  const PaymentModal({Key? key}) : super(key: key);
+  final int id;
+
+  const PaymentModal(this.id, {Key? key}) : super(key: key);
 
   @override
   State<PaymentModal> createState() => _PaymentModalState();
@@ -16,6 +18,7 @@ class PaymentModal extends StatefulWidget {
 
 class _PaymentModalState extends State<PaymentModal> {
   String selectedFilePath = "";
+  File? selectedFile;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,12 +41,9 @@ class _PaymentModalState extends State<PaymentModal> {
                 allowedExtensions: ['jpg', 'png', 'pdf'],
               );
               if (result != null) {
-                File file = File(result.files.single.path!);
-                if (kDebugMode) {
-                  print(file.path);
-                }
+                selectedFile = File(result.files.single.path!);
                 setState(() {
-                  selectedFilePath = basename(file.path);
+                  selectedFilePath = basename(selectedFile!.path);
                 });
               } else {}
             },
@@ -54,14 +54,12 @@ class _PaymentModalState extends State<PaymentModal> {
                   (selectedFilePath != "")
                       ? "Change File..."
                       : "Select File...",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                Icon(Icons.attach_file_outlined)
+                const SizedBox(width: 10),
+                const Icon(Icons.attach_file_outlined)
               ],
             ),
             style: ElevatedButton.styleFrom(
@@ -85,33 +83,68 @@ class _PaymentModalState extends State<PaymentModal> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("Cancel"),
+                    child: const Text("Cancel"),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.black38,
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)),
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Row(
-                      children: [Text("Upload"), Icon(Icons.cloud_upload)],
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
+                  const SizedBox(width: 10),
+                  Visibility(
+                      visible:
+                          Provider.of<RequestFormViewModel>(context).loading,
+                      child: const CircularProgressIndicator()),
+                  Visibility(
+                    visible:
+                        !Provider.of<RequestFormViewModel>(context).loading,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (selectedFile != null) {
+                          await context
+                              .read<RequestFormViewModel>()
+                              .uploadReceipt(widget.id, selectedFile!);
+                          if (context.read<RequestFormViewModel>().success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.green,
+                                content: Text(
+                                  context.read<RequestFormViewModel>().message!,
+                                ),
+                              ),
+                            );
+                            Navigator.pop(context);
+                          } else if (context
+                              .read<RequestFormViewModel>()
+                              .failure) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(
+                                  context.read<RequestFormViewModel>().message!,
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Row(
+                        children: const [
+                          Text("Upload"),
+                          Icon(Icons.cloud_upload)
+                        ],
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                      ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 10,
-              )
+              const SizedBox(height: 10)
             ],
           )
         ],

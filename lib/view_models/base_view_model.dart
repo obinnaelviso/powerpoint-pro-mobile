@@ -8,6 +8,10 @@ class BaseViewModel with ChangeNotifier {
   ApiClient api = ApiClient();
   bool _loading = false;
   bool get loading => _loading;
+  bool _success = false;
+  bool get success => _success;
+  bool _failure = false;
+  bool get failure => _failure;
   String? _message;
   String? get message => _message;
   Map<String, dynamic> _errors = {};
@@ -15,6 +19,16 @@ class BaseViewModel with ChangeNotifier {
 
   void setLoading(bool loading) {
     _loading = loading;
+    notifyListeners();
+  }
+
+  void setSuccess(bool isSuccess) {
+    _success = isSuccess;
+    notifyListeners();
+  }
+
+  void setFailure(bool isFailure) {
+    _failure = isFailure;
     notifyListeners();
   }
 

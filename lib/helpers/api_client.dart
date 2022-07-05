@@ -4,12 +4,20 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:powerpoint_pro/helpers/api_status.dart';
 
+//Singleton class
 class ApiClient {
-  String baseUrl = "http://192.168.95.194/api";
+  String baseUrl = "http://192.168.201.17/api";
+  static final ApiClient _apiClient = ApiClient._internal();
 
   final Map<String, String> _headers = {
     HttpHeaders.acceptHeader: "application/json",
   };
+
+  factory ApiClient() {
+    return _apiClient;
+  }
+
+  ApiClient._internal();
 
   void setBaseUrl(String url) {
     baseUrl = url;
@@ -22,19 +30,35 @@ class ApiClient {
       await _makeRequest(() async =>
           await http.post(getRoute(path), body: body, headers: _headers));
 
-  Future<dynamic> put(String path, Map<String, dynamic> body) async =>
+  Future<dynamic> put(String route, Map<String, dynamic> body) async =>
       await _makeRequest(() async =>
-          await http.put(getRoute(path), body: body, headers: _headers));
+          await http.put(getRoute(route), body: body, headers: _headers));
 
   Future<dynamic> delete(String path, Map<String, dynamic> body) async =>
       await _makeRequest(() async =>
           await http.delete(getRoute(path), body: body, headers: _headers));
 
+  Future<dynamic> multipart(String path, File file) async =>
+      await _makeRequest(() async {
+        var req = http.MultipartRequest("POST", getRoute(path));
+        req.headers.addAll(_headers);
+        req.files.add(await http.MultipartFile.fromPath("file", file.path));
+        return await req.send();
+        // var response = await req.send();
+      });
+
   Future<dynamic> _makeRequest(Future<dynamic> Function() serverRequest) async {
     try {
       var response = await serverRequest();
       int statusCode = response.statusCode;
-      Map<String, dynamic> data = jsonDecode(response.body);
+      Map<String, dynamic> data;
+      if (response is http.StreamedResponse) {
+        data = {};
+        print(response.stream.first);
+      } else {
+        data = jsonDecode(response.body);
+      }
+
       switch (statusCode) {
         case 200:
           {
@@ -43,6 +67,10 @@ class ApiClient {
         case 422:
           {
             return Failure(data['message'], data['errors']);
+          }
+        case 401:
+          {
+            return Failure(data['message'], {});
           }
         default:
           {

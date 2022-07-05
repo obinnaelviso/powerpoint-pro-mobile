@@ -1,6 +1,6 @@
 class Success {
   String? message;
-  final Map<String, dynamic>? data;
+  dynamic data;
 
   Success(this.message, this.data);
 }

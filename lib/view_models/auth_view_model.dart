@@ -28,6 +28,24 @@ class AuthViewModel extends BaseViewModel {
     setMessage(response.message ?? "");
   }
 
+  Future<void> register(Map<String, dynamic> credentials) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+    var response = await api.post("/register", credentials);
+    if (response is Success) {
+      login({
+        "email": credentials["email"],
+        "password": credentials["password"],
+      });
+    }
+    if (response is Failure) {
+      setErrors(response.data);
+    }
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
   Future<String?> _getDeviceInfo() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {

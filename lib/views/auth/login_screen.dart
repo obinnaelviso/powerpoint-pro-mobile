@@ -1,23 +1,48 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:powerpoint_pro/helpers/constants.dart';
 import 'package:powerpoint_pro/view_models/auth_view_model.dart';
+import 'package:powerpoint_pro/views/auth/registration_screen.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
 import 'package:powerpoint_pro/views/user/user_main_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helpers/api_client.dart';
 import '../components/error_text.dart';
 import '../components/form_input.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   static const route = "/login";
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _emailTC = TextEditingController();
+
   final _passwordTC = TextEditingController();
+
   final authVMProvider = Provider.of<AuthViewModel>;
+  String? token;
+
+  void setToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    token = prefs.getString("token");
+    if (token != null) {
+      ApiClient().setToken(token!);
+      Navigator.pushReplacementNamed(context, UserMainScreen.route);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setToken();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +113,6 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              print(_emailTC.text);
-                              print(_passwordTC.text);
                               await context.read<AuthViewModel>().login({
                                 "email": _emailTC.text,
                                 "password": _passwordTC.text
@@ -122,7 +145,10 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, RegistrationScreen.route);
+                            },
                             child: const Text(
                               'Sign Up',
                             ),

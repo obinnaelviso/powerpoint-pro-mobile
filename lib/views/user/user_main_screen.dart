@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:powerpoint_pro/helpers/constants.dart';
+import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
+import 'package:powerpoint_pro/views/user/user_create_form_screen.dart';
+import 'package:provider/provider.dart';
 
 class UserMainScreen extends StatefulWidget {
   const UserMainScreen({Key? key}) : super(key: key);
@@ -11,10 +14,22 @@ class UserMainScreen extends StatefulWidget {
 
 class _UserMainScreenState extends State<UserMainScreen> {
   int _selectedIndex = 0;
+  List<dynamic> _requestForms = [];
+
+  void loadRequestFormsData(BuildContext context) async {
+    if (_requestForms.isEmpty) {
+      await context.read<RequestFormViewModel>().getAll();
+      _requestForms = context.read<RequestFormViewModel>().requestForms;
+      print("Data loaded");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      loadRequestFormsData(context);
+    });
   }
 
   @override
@@ -33,7 +48,9 @@ class _UserMainScreenState extends State<UserMainScreen> {
         child: const Icon(
           Icons.add,
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, UserCreateFormScreen.route);
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(

@@ -1,85 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
 import 'package:powerpoint_pro/views/components/empty_screen.dart';
 import 'package:powerpoint_pro/views/components/payment_modal.dart';
+import 'package:provider/provider.dart';
 
+import '../../../models/request_form.dart';
 import '../../components/status_label.dart';
 
-class UserHomePanel extends StatelessWidget {
-  UserHomePanel({Key? key}) : super(key: key);
+class UserHomePanel extends StatefulWidget {
+  const UserHomePanel({Key? key}) : super(key: key);
   static const String title = "Home";
-  final List<Map<String, dynamic>> requestForms = <Map<String, dynamic>>[
-    {
-      "name": "Frank Charles",
-      "category": "Agriculture",
-      "sub_category": null,
-      "topic": "Mechanizing Rural Farms",
-      "description": null,
-      "duration": 2,
-      "slides": 5,
-      "phone": "+2348026978647",
-      "email": "dreamor47@gmail.com",
-      "location": null,
-      "need": null,
-      "amount": 2000,
-      "amount_string": "₦2000",
-      "receipt_url": "",
-      "created_at": "2022-06-25 14:02:36",
-      "status": {"id": 3, "title": "pending"},
-      "user": {
-        "id": 2,
-        "first_name": "John",
-        "last_name": "Doe",
-        "email": "johndoe@powerpoint-pro.com",
-        "phone_verified": null,
-        "email_verified": null,
-        "role": "user",
-        "status": {"id": 1, "title": "active"}
-      }
-    },
-    {
-      "name": "Frank Charles",
-      "category": "Agriculture",
-      "sub_category": null,
-      "topic": "Mechanizing Rural Farms",
-      "description": null,
-      "duration": 2,
-      "slides": 5,
-      "phone": "+2348026978647",
-      "email": "dreamor47@gmail.com",
-      "location": null,
-      "need": null,
-      "amount": 2000,
-      "amount_string": "₦2000",
-      "receipt_url": "",
-      "created_at": "2022-06-25 14:02:36",
-      "status": {"id": 3, "title": "pending"},
-      "user": {
-        "id": 2,
-        "first_name": "John",
-        "last_name": "Doe",
-        "email": "johndoe@powerpoint-pro.com",
-        "phone_verified": null,
-        "email_verified": null,
-        "role": "user",
-        "status": {"id": 1, "title": "active"}
-      }
-    },
-  ];
+
+  @override
+  State<UserHomePanel> createState() => _UserHomePanelState();
+}
+
+class _UserHomePanelState extends State<UserHomePanel> {
+  dynamic requestForms = [];
+
+  void setRequestForms(BuildContext context) async {
+    await context.read<RequestFormViewModel>().getAll();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      setRequestForms(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    requestForms = Provider.of<RequestFormViewModel>(context).requestForms;
     if (requestForms.isEmpty) {
-      return const EmptyScreen("There is nothing to display");
+      return ModalProgressHUD(
+          inAsyncCall: Provider.of<RequestFormViewModel>(context).loading,
+          child: const EmptyScreen("There is nothing to display"));
     } else {
       return ListView.builder(
         itemCount: requestForms.length,
         itemBuilder: (context, index) {
-          final Map<String, dynamic> requestForm = requestForms[index];
-          final String topic = requestForm["topic"];
-          final int slidesCount = requestForm["slides"];
-          final int duration = requestForm["duration"];
-          final String date = requestForm["created_at"];
-          final String status = requestForm["status"]["title"];
+          final RequestForm requestForm = requestForms[index];
+          final String topic = requestForm.name;
+          final int slidesCount = requestForm.slides;
+          final int duration = requestForm.duration;
+          final String date = requestForm.createdAt.toString();
+          final String status = requestForm.status.title;
           return Card(
             child: InkWell(
               onTap: () {},
@@ -114,8 +82,8 @@ class UserHomePanel extends StatelessWidget {
                             showModalBottomSheet(
                               context: context,
                               isScrollControlled: true,
-                              builder: (context) => const SingleChildScrollView(
-                                  child: PaymentModal()),
+                              builder: (context) => SingleChildScrollView(
+                                  child: PaymentModal(requestForms[index].id)),
                               shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.vertical(
                                   top: Radius.circular(20),

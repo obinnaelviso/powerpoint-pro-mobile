@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FormInput extends StatelessWidget {
+class FormInput extends StatefulWidget {
   const FormInput(
       {Key? key,
       this.label = '',
@@ -18,26 +18,45 @@ class FormInput extends StatelessWidget {
   final TextEditingController? controller;
 
   @override
+  State<FormInput> createState() => _FormInputState();
+}
+
+class _FormInputState extends State<FormInput> {
+  bool _isPasswordHidden = true;
+
+  @override
   Widget build(BuildContext context) {
     return TextField(
-      obscureText: hideText,
-      keyboardType: type,
+      obscureText: (widget.hideText && _isPasswordHidden),
+      keyboardType: widget.type,
       cursorColor: Colors.black,
-      controller: controller,
+      controller: widget.controller,
       decoration: InputDecoration(
-        label: label.isEmpty
+        suffixIcon: widget.hideText
+            ? IconButton(
+                icon: Icon(_isPasswordHidden
+                    ? Icons.visibility_off
+                    : Icons.visibility),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordHidden = !_isPasswordHidden;
+                  });
+                },
+              )
+            : null,
+        label: widget.label.isEmpty
             ? null
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(label),
-                  SizedBox(width: required ? 5 : 0),
-                  Text(required ? "*" : "",
+                  Text(widget.label),
+                  SizedBox(width: widget.required ? 5 : 0),
+                  Text(widget.required ? "*" : "",
                       style: const TextStyle(color: Colors.redAccent))
                 ],
               ),
       ),
-      onChanged: onInput,
+      onChanged: widget.onInput,
     );
   }
 }

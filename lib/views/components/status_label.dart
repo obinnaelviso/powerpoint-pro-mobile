@@ -22,6 +22,14 @@ class StatusLabel extends StatelessWidget {
             foregroundColor: Colors.blue.shade700,
           );
         }
+      case "processing":
+        {
+          return StatusBadge(
+            "Awaiting approval",
+            backgroundColor: Colors.blue.shade100,
+            foregroundColor: Colors.blue.shade700,
+          );
+        }
       case "cancelled":
         {
           return StatusBadge(
@@ -40,7 +48,7 @@ class StatusLabel extends StatelessWidget {
         }
       default:
         {
-          return const Text('Invalid status');
+          return Text(status);
         }
     }
   }

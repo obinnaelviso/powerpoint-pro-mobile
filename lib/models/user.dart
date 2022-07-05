@@ -4,24 +4,28 @@ import 'package:powerpoint_pro/models/status.dart';
 
 class User {
   User({
-    required this.id,
+    this.id,
     required this.firstName,
     required this.lastName,
     required this.email,
-    required this.phoneVerified,
-    required this.emailVerified,
-    required this.role,
-    required this.status,
+    this.password,
+    this.passwordConfirm,
+    this.phoneVerified,
+    this.emailVerified,
+    this.role,
+    this.status,
   });
 
-  int id;
+  int? id;
   String firstName;
   String lastName;
   String email;
+  String? password;
+  String? passwordConfirm;
   String? phoneVerified;
   String? emailVerified;
-  String role;
-  Status status;
+  String? role;
+  Status? status;
 
   factory User.fromJson(String str) => User.fromMap(json.decode(str));
 
@@ -32,6 +36,7 @@ class User {
         firstName: json["first_name"],
         lastName: json["last_name"],
         email: json["email"],
+        password: json["password"],
         phoneVerified: json["phone_verified"],
         emailVerified: json["email_verified"],
         role: json["role"],
@@ -46,6 +51,8 @@ class User {
         "phone_verified": phoneVerified,
         "email_verified": emailVerified,
         "role": role,
-        "status": status.toMap(),
+        "password": password,
+        "password_confirmation": passwordConfirm,
+        "status": status?.toMap(),
       };
 }
