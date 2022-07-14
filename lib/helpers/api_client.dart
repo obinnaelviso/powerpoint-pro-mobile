@@ -6,7 +6,7 @@ import 'package:powerpoint_pro/helpers/api_status.dart';
 
 //Singleton class
 class ApiClient {
-  String baseUrl = "http://192.168.201.17/api";
+  String baseUrl = "https://powerpoint-pro.unifieddiamond.com/api";
   static final ApiClient _apiClient = ApiClient._internal();
 
   final Map<String, String> _headers = {
@@ -34,9 +34,8 @@ class ApiClient {
       await _makeRequest(() async =>
           await http.put(getRoute(route), body: body, headers: _headers));
 
-  Future<dynamic> delete(String path, Map<String, dynamic> body) async =>
-      await _makeRequest(() async =>
-          await http.delete(getRoute(path), body: body, headers: _headers));
+  Future<dynamic> delete(String path) async => await _makeRequest(
+      () async => await http.delete(getRoute(path), headers: _headers));
 
   Future<dynamic> multipart(String path, File file) async =>
       await _makeRequest(() async {
@@ -47,6 +46,13 @@ class ApiClient {
         // var response = await req.send();
       });
 
+  Future<dynamic> download(String path, File file) async =>
+      await _makeRequest(() async {
+        final httpClient = http.Client();
+        final req = http.Request('GET', getRoute(path, rawUrl: true));
+        final res = await httpClient.send(req);
+      });
+
   Future<dynamic> _makeRequest(Future<dynamic> Function() serverRequest) async {
     try {
       var response = await serverRequest();
@@ -54,9 +60,13 @@ class ApiClient {
       Map<String, dynamic> data;
       if (response is http.StreamedResponse) {
         data = {};
-        print(response.stream.first);
       } else {
-        data = jsonDecode(response.body);
+        if (response.body != null) {
+          print(response.body);
+          data = jsonDecode(response.body);
+        } else {
+          data = {};
+        }
       }
 
       switch (statusCode) {
@@ -72,9 +82,13 @@ class ApiClient {
           {
             return Failure(data['message'], {});
           }
+        case 404:
+          {
+            return Failure("Not found", {});
+          }
         default:
           {
-            return Failure(data['message'], data['errors']);
+            return Failure(data['message'], {});
           }
       }
     } on HttpException {
@@ -91,7 +105,7 @@ class ApiClient {
     _headers[HttpHeaders.authorizationHeader] = "Bearer $token";
   }
 
-  Uri getRoute(String path) {
-    return Uri.parse(baseUrl + path);
+  Uri getRoute(String path, {bool rawUrl = true}) {
+    return Uri.parse(rawUrl ? path : baseUrl + path);
   }
 }

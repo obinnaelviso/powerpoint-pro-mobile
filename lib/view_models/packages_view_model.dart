@@ -5,11 +5,11 @@ import 'package:powerpoint_pro/models/package.dart';
 import 'package:powerpoint_pro/view_models/base_view_model.dart';
 
 class PackagesViewModel extends BaseViewModel {
-  List<Category> _packages = [];
+  List<BankAccount> _packages = [];
   UnmodifiableListView get packages => UnmodifiableListView(_packages);
 
-  Category? _package;
-  Category? get package => _package;
+  BankAccount? _package;
+  BankAccount? get package => _package;
 
   Future<void> getAll() async {
     setLoading(true);
@@ -54,12 +54,12 @@ class PackagesViewModel extends BaseViewModel {
 
   void setPackages(List<Map<String, dynamic>> packagesJson) {
     _packages =
-        packagesJson.map((package) => Category.fromMap(package)).toList();
+        packagesJson.map((package) => BankAccount.fromMap(package)).toList();
     notifyListeners();
   }
 
   void setPackage(Map<String, dynamic> packageJson) {
-    _package = Category.fromMap(packageJson);
+    _package = BankAccount.fromMap(packageJson);
     notifyListeners();
   }
 }

@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ng.techzoid.powerpoint_pro">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="powerpoint_pro"
+        android:label="Powerpoint Pro"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

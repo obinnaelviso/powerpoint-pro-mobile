@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:powerpoint_pro/view_models/bank_account_view_model.dart';
 import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
+import 'package:powerpoint_pro/views/components/alert_snack.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +21,45 @@ class PaymentModal extends StatefulWidget {
 class _PaymentModalState extends State<PaymentModal> {
   String selectedFilePath = "";
   File? selectedFile;
+
+  List<Widget> getBankAccounts(List<dynamic> bankAccounts) {
+    if (bankAccounts.isNotEmpty) {
+      return bankAccounts
+          .map((bankAccount) => Column(
+                children: [
+                  Row(children: [
+                    const Text("Bank Name: ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text("${bankAccount.bankName}",
+                        style: const TextStyle(fontSize: 18)),
+                  ]),
+                  Row(children: [
+                    const Text("Account Name: ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text("${bankAccount.accountName}",
+                        style: const TextStyle(fontSize: 18)),
+                  ]),
+                  Row(children: [
+                    const Text("Account Number: ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text("${bankAccount.accountNumber}",
+                        style: const TextStyle(fontSize: 18)),
+                  ]),
+                  const SizedBox(height: 20),
+                ],
+              ))
+          .toList();
+    }
+    return [];
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<dynamic> bankAccounts =
+        Provider.of<BankAccountViewModel>(context).bankAccounts;
     return Container(
       padding: EdgeInsets.only(
         top: 30,
@@ -32,20 +71,25 @@ class _PaymentModalState extends State<PaymentModal> {
         children: [
           const TitleText("Upload proof of Payment"),
           const SizedBox(height: 20),
+          const Text("Make payment to the following account: ",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 20),
+          Column(children: getBankAccounts(bankAccounts)),
+          const SizedBox(height: 20),
           const Text("Click the button below to upload proof of payment"),
           const SizedBox(height: 30),
           ElevatedButton(
             onPressed: () async {
               FilePickerResult? result = await FilePicker.platform.pickFiles(
                 type: FileType.custom,
-                allowedExtensions: ['jpg', 'png', 'pdf'],
+                allowedExtensions: ['jpg', 'png', 'webp', 'bmp', 'pdf'],
               );
               if (result != null) {
                 selectedFile = File(result.files.single.path!);
                 setState(() {
                   selectedFilePath = basename(selectedFile!.path);
                 });
-              } else {}
+              }
             },
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -118,14 +162,11 @@ class _PaymentModalState extends State<PaymentModal> {
                           } else if (context
                               .read<RequestFormViewModel>()
                               .failure) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text(
-                                  context.read<RequestFormViewModel>().message!,
-                                ),
-                              ),
-                            );
+                            AlertSnack.showAlert(context,
+                                text: context
+                                    .read<RequestFormViewModel>()
+                                    .message!,
+                                type: AlertSnackTypes.error);
                           }
                         }
                       },

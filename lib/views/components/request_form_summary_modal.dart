@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class RequestFormSummaryModal extends StatelessWidget {
   final Map<String, dynamic> credentials;
 
-  final Category package;
+  final BankAccount package;
   const RequestFormSummaryModal({
     Key? key,
     required this.credentials,

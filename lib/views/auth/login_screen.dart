@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:powerpoint_pro/helpers/constants.dart';
 import 'package:powerpoint_pro/view_models/auth_view_model.dart';
+import 'package:powerpoint_pro/views/admin/admin_main_screen.dart';
 import 'package:powerpoint_pro/views/auth/registration_screen.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
 import 'package:powerpoint_pro/views/user/user_main_screen.dart';
@@ -27,14 +28,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordTC = TextEditingController();
 
   final authVMProvider = Provider.of<AuthViewModel>;
-  String? token;
 
   void setToken() async {
+    String? token;
+    String? role;
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString("token");
-    if (token != null) {
-      ApiClient().setToken(token!);
-      Navigator.pushReplacementNamed(context, UserMainScreen.route);
+    role = prefs.getString("role");
+    print(role);
+    if ((token != null) && (token != "")) {
+      ApiClient().setToken(token);
+      if (role == "admin") {
+        Navigator.pushReplacementNamed(context, AdminMainScreen.route);
+      } else {
+        Navigator.pushReplacementNamed(context, UserMainScreen.route);
+      }
     }
   }
 
@@ -113,19 +121,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              await context.read<AuthViewModel>().login({
+                              final authVm = context.read<AuthViewModel>();
+                              await authVm.login({
                                 "email": _emailTC.text,
                                 "password": _passwordTC.text
                               });
 
-                              if (context
-                                  .read<AuthViewModel>()
-                                  .errors
-                                  .isNotEmpty) {
+                              if (authVm.failure) {
                                 _passwordTC.clear();
                               } else {
-                                Navigator.pushReplacementNamed(
-                                    context, UserMainScreen.route);
+                                if (authVm.user!.isAdmin()) {
+                                  Navigator.pushReplacementNamed(
+                                      context, AdminMainScreen.route);
+                                } else {
+                                  Navigator.pushReplacementNamed(
+                                      context, UserMainScreen.route);
+                                }
                               }
                             },
                             child: const Text('SIGN IN'),

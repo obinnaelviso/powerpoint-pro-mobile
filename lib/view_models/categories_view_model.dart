@@ -5,11 +5,11 @@ import 'package:powerpoint_pro/models/package.dart';
 import 'package:powerpoint_pro/view_models/base_view_model.dart';
 
 class CategoriesViewModel extends BaseViewModel {
-  List<Category> _categories = [];
+  List<BankAccount> _categories = [];
   UnmodifiableListView get categories => UnmodifiableListView(_categories);
 
-  Category? _category;
-  Category? get category => _category;
+  BankAccount? _category;
+  BankAccount? get category => _category;
 
   Future<void> getAll() async {
     setLoading(true);
@@ -33,8 +33,9 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   void setCategories(List<dynamic> categoriesJson) {
-    _categories =
-        categoriesJson.map((category) => Category.fromMap(category)).toList();
+    _categories = categoriesJson
+        .map((category) => BankAccount.fromMap(category))
+        .toList();
     notifyListeners();
   }
 }

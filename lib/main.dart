@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:powerpoint_pro/view_models/auth_view_model.dart';
+import 'package:powerpoint_pro/view_models/bank_account_view_model.dart';
 import 'package:powerpoint_pro/view_models/categories_view_model.dart';
 import 'package:powerpoint_pro/view_models/packages_view_model.dart';
+import 'package:powerpoint_pro/view_models/profile_view_model.dart';
 import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
+import 'package:powerpoint_pro/views/admin/admin_main_screen.dart';
 import 'package:powerpoint_pro/views/auth/login_screen.dart';
 import 'package:powerpoint_pro/views/auth/registration_screen.dart';
 import 'package:powerpoint_pro/views/user/user_create_form_screen.dart';
@@ -17,6 +20,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => RequestFormViewModel()),
         ChangeNotifierProvider(create: (context) => PackagesViewModel()),
         ChangeNotifierProvider(create: (context) => CategoriesViewModel()),
+        ChangeNotifierProvider(create: (context) => BankAccountViewModel()),
+        ChangeNotifierProvider(create: (context) => ProfileViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -36,15 +41,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         title: 'Powerpoint pro',
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
           primarySwatch: Colors.red,
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
@@ -67,10 +63,11 @@ class _MyAppState extends State<MyApp> {
         ),
         initialRoute: LoginScreen.route,
         routes: {
-          LoginScreen.route: (context) => LoginScreen(),
+          LoginScreen.route: (context) => const LoginScreen(),
           RegistrationScreen.route: (context) => RegistrationScreen(),
-          UserMainScreen.route: (context) => UserMainScreen(),
-          UserCreateFormScreen.route: (context) => UserCreateFormScreen(),
+          UserMainScreen.route: (context) => const UserMainScreen(),
+          UserCreateFormScreen.route: (context) => const UserCreateFormScreen(),
+          AdminMainScreen.route: (context) => const AdminMainScreen(),
         });
   }
 }

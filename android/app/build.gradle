@@ -21,12 +21,17 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def flutterSdkVersion = localProperties.getProperty('flutter.compileSdkVersion').toInteger()
+if (flutterSdkVersion == null) {
+    flutterSdkVersion = 32
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion flutterSdkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

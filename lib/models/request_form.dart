@@ -31,13 +31,13 @@ class RequestForm {
   dynamic subCategory;
   String topic;
   dynamic description;
-  int duration;
-  int slides;
+  dynamic duration;
+  dynamic slides;
   String phone;
   String email;
   dynamic location;
   dynamic need;
-  int amount;
+  dynamic amount;
   String amountString;
   String receiptUrl;
   DateTime createdAt;
@@ -50,44 +50,44 @@ class RequestForm {
   String toJson() => json.encode(toMap());
 
   factory RequestForm.fromMap(Map<String, dynamic> json) => RequestForm(
-    id: json["id"],
-    name: json["name"],
-    category: json["category"],
-    subCategory: json["sub_category"],
-    topic: json["topic"],
-    description: json["description"],
-    duration: json["duration"],
-    slides: json["slides"],
-    phone: json["phone"],
-    email: json["email"],
-    location: json["location"],
-    need: json["need"],
-    amount: json["amount"],
-    amountString: json["amount_string"],
-    receiptUrl: json["receipt_url"],
-    createdAt: DateTime.parse(json["created_at"]),
-    status: Status.fromMap(json["status"]),
-    user: User.fromMap(json["user"]),
-  );
+        id: json["id"],
+        name: json["name"],
+        category: json["category"],
+        subCategory: json["sub_category"],
+        topic: json["topic"],
+        description: json["description"],
+        duration: json["duration"],
+        slides: json["slides"],
+        phone: json["phone"],
+        email: json["email"],
+        location: json["location"],
+        need: json["need"],
+        amount: json["amount"],
+        amountString: json["amount_string"],
+        receiptUrl: json["receipt_url"],
+        createdAt: DateTime.parse(json["created_at"]),
+        status: Status.fromMap(json["status"]),
+        user: User.fromMap(json["user"]),
+      );
 
   Map<String, dynamic> toMap() => {
-    "id": id,
-    "name": name,
-    "category": category,
-    "sub_category": subCategory,
-    "topic": topic,
-    "description": description,
-    "duration": duration,
-    "slides": slides,
-    "phone": phone,
-    "email": email,
-    "location": location,
-    "need": need,
-    "amount": amount,
-    "amount_string": amountString,
-    "receipt_url": receiptUrl,
-    "created_at": createdAt.toIso8601String(),
-    "status": status.toMap(),
-    "user": user.toMap(),
-  };
+        "id": id,
+        "name": name,
+        "category": category,
+        "sub_category": subCategory,
+        "topic": topic,
+        "description": description,
+        "duration": duration,
+        "slides": slides,
+        "phone": phone,
+        "email": email,
+        "location": location,
+        "need": need,
+        "amount": amount,
+        "amount_string": amountString,
+        "receipt_url": receiptUrl,
+        "created_at": createdAt.toIso8601String(),
+        "status": status.toMap(),
+        "user": user.toMap(),
+      };
 }

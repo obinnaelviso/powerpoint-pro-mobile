@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:powerpoint_pro/models/status.dart';
 
-class Category {
-  Category({
+class BankAccount {
+  BankAccount({
     this.id,
     this.title,
     this.description,
@@ -19,19 +19,20 @@ class Category {
   int? id;
   String? title;
   String? description;
-  int? minDuration;
-  int? maxDuration;
-  int? minSlides;
-  int? maxSlides;
-  int? amount;
+  dynamic minDuration;
+  dynamic maxDuration;
+  dynamic minSlides;
+  dynamic maxSlides;
+  dynamic amount;
   String? amountString;
   Status? status;
 
-  factory Category.fromJson(String str) => Category.fromMap(json.decode(str));
+  factory BankAccount.fromJson(String str) =>
+      BankAccount.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Category.fromMap(Map<String, dynamic> json) => Category(
+  factory BankAccount.fromMap(Map<String, dynamic> json) => BankAccount(
         id: json["id"],
         title: json["title"],
         description: json["description"],

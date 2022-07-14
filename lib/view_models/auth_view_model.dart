@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:powerpoint_pro/helpers/api_status.dart';
 import 'package:powerpoint_pro/models/user.dart';
 import 'package:powerpoint_pro/view_models/base_view_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthViewModel extends BaseViewModel {
   User? _user;
@@ -23,6 +24,26 @@ class AuthViewModel extends BaseViewModel {
     }
     if (response is Failure) {
       setErrors(response.data);
+    }
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> logout() async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+    var response = await api.post("/logout", {});
+    if (response is Success) {
+      setToken("");
+      setRole("");
+      setSuccess(true);
+      setFailure(false);
+    }
+    if (response is Failure) {
+      setErrors(response.data);
+      setSuccess(false);
+      setFailure(true);
     }
     setLoading(false);
     setMessage(response.message ?? "");
@@ -63,6 +84,12 @@ class AuthViewModel extends BaseViewModel {
 
   void setUser(Map<String, dynamic> userJson) {
     _user = User.fromMap(userJson);
+    setRole(_user!.role!);
     notifyListeners();
+  }
+
+  void setRole(String role) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("role", role);
   }
 }

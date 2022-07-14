@@ -27,6 +27,8 @@ class User {
   String? role;
   Status? status;
 
+  get name => "$firstName $lastName";
+
   factory User.fromJson(String str) => User.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
@@ -40,7 +42,9 @@ class User {
         phoneVerified: json["phone_verified"],
         emailVerified: json["email_verified"],
         role: json["role"],
-        status: Status.fromMap(json["status"]),
+        status: Status.fromMap(
+          json["status"],
+        ),
       );
 
   Map<String, dynamic> toMap() => {
@@ -55,4 +59,12 @@ class User {
         "password_confirmation": passwordConfirm,
         "status": status?.toMap(),
       };
+
+  bool isAdmin() {
+    if (role == "user") {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }

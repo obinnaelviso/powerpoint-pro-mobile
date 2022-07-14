@@ -29,10 +29,14 @@ class RequestFormViewModel extends BaseViewModel {
       } else {
         setRequestForms(response.data as List<dynamic>);
       }
+      setSuccess(true);
+      setFailure(false);
     }
 
     if (response is Failure) {
       setErrors(response.data);
+      setFailure(true);
+      setSuccess(false);
     }
     setLoading(false);
   }
@@ -81,11 +85,153 @@ class RequestFormViewModel extends BaseViewModel {
     setMessage("");
     setErrors({});
 
-    var response = await api.post(
-        "/request-forms/$requestFormId/upload-receipt", {"file": file.path});
+    var response = await api.multipart(
+        "/request-forms/$requestFormId/upload-receipt", file);
 
     if (response is Success) {
       getAll();
+      setMessage("Payment receipt uploaded successfully. Awaiting approval!");
+      setSuccess(true);
+      setFailure(false);
+    }
+
+    if (response is Failure) {
+      setErrors(response.data);
+      setSuccess(false);
+      setFailure(true);
+    }
+
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> approve(int requestFormId) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+
+    var response = await api.put("/request-forms/$requestFormId/approve", {});
+
+    if (response is Success) {
+      await getAll(isUser: false);
+      setSuccess(true);
+      setFailure(false);
+    }
+
+    if (response is Failure) {
+      setErrors(response.data);
+      setSuccess(false);
+      setFailure(true);
+    }
+
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> cancel(int requestFormId) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+
+    var response = await api.put("/request-forms/$requestFormId/cancel", {});
+
+    if (response is Success) {
+      await getAll(isUser: false);
+      setSuccess(true);
+      setFailure(false);
+    }
+
+    if (response is Failure) {
+      setErrors(response.data);
+      setSuccess(false);
+      setFailure(true);
+    }
+
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> complete(int requestFormId) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+
+    var response = await api.put("/request-forms/$requestFormId/complete", {});
+
+    if (response is Success) {
+      await getAll(isUser: false);
+      setSuccess(true);
+      setFailure(false);
+    }
+
+    if (response is Failure) {
+      setErrors(response.data);
+      setSuccess(false);
+      setFailure(true);
+    }
+
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> pending(int requestFormId) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+
+    var response = await api.put("/request-forms/$requestFormId/pending", {});
+
+    if (response is Success) {
+      await getAll(isUser: false);
+      setSuccess(true);
+      setFailure(false);
+    }
+
+    if (response is Failure) {
+      setErrors(response.data);
+      setSuccess(false);
+      setFailure(true);
+    }
+
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> download(String downloadUrl) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+
+    var response = await api.get(
+      downloadUrl,
+      rawUrl: true,
+    );
+
+    if (response is Success) {
+      await getAll(isUser: false);
+      setSuccess(true);
+      setFailure(false);
+    }
+
+    if (response is Failure) {
+      setErrors(response.data);
+      setSuccess(false);
+      setFailure(true);
+    }
+
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> delete(int requestFormId) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+
+    var response = await api.delete("/request-forms/$requestFormId");
+
+    if (response is Success) {
+      await getAll(isUser: false);
       setSuccess(true);
       setFailure(false);
     }
