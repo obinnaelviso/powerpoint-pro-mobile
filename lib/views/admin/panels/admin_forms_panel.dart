@@ -92,7 +92,8 @@ class _AdminFormsPanelState extends State<AdminFormsPanel> {
       return ModalProgressHUD(
         inAsyncCall: Provider.of<RequestFormViewModel>(context).loading,
         child: RefreshIndicator(
-          onRefresh: () => context.read<RequestFormViewModel>().getAll(),
+          onRefresh: () =>
+              context.read<RequestFormViewModel>().getAll(isUser: false),
           child: ListView.builder(
             itemCount: requestForms.length,
             itemBuilder: (lvContext, index) {
@@ -100,7 +101,7 @@ class _AdminFormsPanelState extends State<AdminFormsPanel> {
               final String topic = requestForm.name;
               final slidesCount = requestForm.slides;
               final duration = requestForm.duration;
-              final String date = requestForm.createdAt.toString();
+              final String date = dateTimeFormat.format(requestForm.createdAt);
               final String status = requestForm.status.title;
               return Card(
                 child: Padding(

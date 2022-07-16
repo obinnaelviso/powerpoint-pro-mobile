@@ -109,8 +109,9 @@ class _AdminHomePanelState extends State<AdminHomePanel> {
               const SizedBox(height: 20),
               Expanded(
                 child: RefreshIndicator(
-                  onRefresh: () =>
-                      context.read<RequestFormViewModel>().getAll(),
+                  onRefresh: () => context
+                      .read<RequestFormViewModel>()
+                      .getAll(isUser: false),
                   child: ListView.separated(
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 10.0),
