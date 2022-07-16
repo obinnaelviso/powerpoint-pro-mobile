@@ -39,7 +39,7 @@ class UserContactPanel extends StatelessWidget {
                       fontSize: 24.0,
                     ),
                   ),
-                )),
+                ),),
               ],
             ),
             const Divider(height: 20.0),

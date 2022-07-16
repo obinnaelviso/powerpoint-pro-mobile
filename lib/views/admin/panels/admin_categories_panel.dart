@@ -61,84 +61,88 @@ class _AdminCategoriesPanelState extends State<AdminCategoriesPanel> {
     } else {
       return ModalProgressHUD(
         inAsyncCall: Provider.of<CategoriesViewModel>(context).loading,
-        child: ListView.builder(
-          itemCount: categories.length,
-          itemBuilder: (lvContext, index) {
-            final Category category = categories[index];
-            final String title = category.title;
-            final String? description = category.description;
-            final categoryTitleController = TextEditingController();
-            return Card(
-              child: ListTile(
-                title: Text(title),
-                subtitle: Text(description ?? ""),
-                trailing: PopupMenuButton<FormOptions>(
-                  onSelected: (FormOptions item) async {
-                    final categoriesVm = context.read<CategoriesViewModel>();
-                    if (item == FormOptions.edit) {
-                      categoryTitleController.text = category.title;
-                      await showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) => SingleChildScrollView(
-                          child: BottomFormModal(
-                            loading: Provider.of<CategoriesViewModel>(context)
-                                .loading,
-                            action: () async {
-                              await categoriesVm.update(category.id,
-                                  {"title": categoryTitleController.text});
-                              AlertSnack.showAlert(context,
-                                  text: categoriesVm.message!,
-                                  type: categoriesVm.success
-                                      ? AlertSnackTypes.success
-                                      : AlertSnackTypes.error);
-                              Navigator.pop(context);
-                            },
-                            actionText: "Update",
-                            children: [
-                              FormInput(
-                                label: "Category Title",
-                                autofocus: true,
-                                required: true,
-                                controller: categoryTitleController,
-                              ),
-                              ErrorText(
-                                error: Provider.of<CategoriesViewModel>(context)
-                                    .errors["title"],
-                              ),
-                            ],
+        child: RefreshIndicator(
+          onRefresh: () => context.read<CategoriesViewModel>().getAll(),
+          child: ListView.builder(
+            itemCount: categories.length,
+            itemBuilder: (lvContext, index) {
+              final Category category = categories[index];
+              final String title = category.title;
+              final String? description = category.description;
+              final categoryTitleController = TextEditingController();
+              return Card(
+                child: ListTile(
+                  title: Text(title),
+                  subtitle: Text(description ?? ""),
+                  trailing: PopupMenuButton<FormOptions>(
+                    onSelected: (FormOptions item) async {
+                      final categoriesVm = context.read<CategoriesViewModel>();
+                      if (item == FormOptions.edit) {
+                        categoryTitleController.text = category.title;
+                        await showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) => SingleChildScrollView(
+                            child: BottomFormModal(
+                              loading: Provider.of<CategoriesViewModel>(context)
+                                  .loading,
+                              action: () async {
+                                await categoriesVm.update(category.id,
+                                    {"title": categoryTitleController.text});
+                                AlertSnack.showAlert(context,
+                                    text: categoriesVm.message!,
+                                    type: categoriesVm.success
+                                        ? AlertSnackTypes.success
+                                        : AlertSnackTypes.error);
+                                Navigator.pop(context);
+                              },
+                              actionText: "Update",
+                              children: [
+                                FormInput(
+                                  label: "Category Title",
+                                  autofocus: true,
+                                  required: true,
+                                  controller: categoryTitleController,
+                                ),
+                                ErrorText(
+                                  error:
+                                      Provider.of<CategoriesViewModel>(context)
+                                          .errors["title"],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
                           ),
-                        ),
-                      );
-                    } else if (item == FormOptions.delete) {
-                      await ConfirmBox.displayDialog(
-                        context,
-                        title: "Confirm Delete",
-                        message: "Are you sure you want to delete this form?",
-                        confirmAction: () async {
-                          context
-                              .read<CategoriesViewModel>()
-                              .delete(category.id)
-                              .then((value) => AlertSnack.showAlert(context,
-                                  text: categoriesVm.message!,
-                                  type: categoriesVm.success
-                                      ? AlertSnackTypes.success
-                                      : AlertSnackTypes.error));
-                          Navigator.pop(context);
-                        },
-                      );
-                    }
-                  },
-                  itemBuilder: (context) => getMenuItems(context),
+                        );
+                      } else if (item == FormOptions.delete) {
+                        await ConfirmBox.displayDialog(
+                          context,
+                          title: "Confirm Delete",
+                          message: "Are you sure you want to delete this form?",
+                          confirmAction: () async {
+                            context
+                                .read<CategoriesViewModel>()
+                                .delete(category.id)
+                                .then((value) => AlertSnack.showAlert(context,
+                                    text: categoriesVm.message!,
+                                    type: categoriesVm.success
+                                        ? AlertSnackTypes.success
+                                        : AlertSnackTypes.error));
+                            Navigator.pop(context);
+                          },
+                        );
+                      }
+                    },
+                    itemBuilder: (context) => getMenuItems(context),
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       );
     }

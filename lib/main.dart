@@ -10,6 +10,7 @@ import 'package:powerpoint_pro/views/admin/admin_main_screen.dart';
 import 'package:powerpoint_pro/views/auth/login_screen.dart';
 import 'package:powerpoint_pro/views/auth/registration_screen.dart';
 import 'package:powerpoint_pro/views/auth/reset_password_screen.dart';
+import 'package:powerpoint_pro/views/splash_screen.dart';
 import 'package:powerpoint_pro/views/user/user_create_form_screen.dart';
 import 'package:powerpoint_pro/views/user/user_main_screen.dart';
 import 'package:provider/provider.dart';
@@ -64,11 +65,12 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
-        initialRoute: LoginScreen.route,
+        initialRoute: SplashScreen.route,
         routes: {
-          LoginScreen.route: (context) => const LoginScreen(),
+          SplashScreen.route: (context) => const SplashScreen(),
+          LoginScreen.route: (context) => LoginScreen(),
           RegistrationScreen.route: (context) => RegistrationScreen(),
-          ResetPasswordScreen.route: (context) => ResetPasswordScreen(),
+          ResetPasswordScreen.route: (context) => const ResetPasswordScreen(),
           UserMainScreen.route: (context) => const UserMainScreen(),
           UserCreateFormScreen.route: (context) => const UserCreateFormScreen(),
           AdminMainScreen.route: (context) => const AdminMainScreen(),

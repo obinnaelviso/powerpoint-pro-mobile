@@ -8,50 +8,20 @@ import 'package:powerpoint_pro/views/auth/reset_password_screen.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
 import 'package:powerpoint_pro/views/user/user_main_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../helpers/api_client.dart';
 import '../components/error_text.dart';
 import '../components/form_input.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatelessWidget {
+  LoginScreen({Key? key}) : super(key: key);
 
   static const route = "/login";
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
   final _emailTC = TextEditingController();
 
   final _passwordTC = TextEditingController();
 
   final authVMProvider = Provider.of<AuthViewModel>;
-
-  void setToken() async {
-    String? token;
-    String? role;
-    final prefs = await SharedPreferences.getInstance();
-    token = prefs.getString("token");
-    role = prefs.getString("role");
-    print(role);
-    if ((token != null) && (token != "")) {
-      ApiClient().setToken(token);
-      if (role == "admin") {
-        Navigator.pushReplacementNamed(context, AdminMainScreen.route);
-      } else {
-        Navigator.pushReplacementNamed(context, UserMainScreen.route);
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setToken();
-  }
 
   @override
   Widget build(BuildContext context) {

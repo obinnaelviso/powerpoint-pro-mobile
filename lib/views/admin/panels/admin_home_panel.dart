@@ -108,108 +108,116 @@ class _AdminHomePanelState extends State<AdminHomePanel> {
               const TitleText("Last 5 Orders"),
               const SizedBox(height: 20),
               Expanded(
-                child: ListView.separated(
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10.0),
-                  itemBuilder: (context, index) {
-                    RequestForm requestForm = requestForms[index];
-                    return Card(
-                      elevation: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 20.0,
-                          horizontal: 10.0,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // User
-                            ListTile(
-                              title: Text(
-                                requestForm.user.name,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: kFS18),
-                              ),
-                              subtitle: Text(
-                                dateTimeFormat.format(requestForm.createdAt),
-                              ),
-                              trailing: PopupMenuButton<FormOptions>(
-                                onSelected: (FormOptions item) async {
-                                  final requestFormVm =
-                                      context.read<RequestFormViewModel>();
-                                  if (item == FormOptions.approve) {
-                                    await requestFormVm.approve(requestForm.id);
-                                  } else if (item == FormOptions.cancel) {
-                                    await requestFormVm.cancel(requestForm.id);
-                                  } else if (item == FormOptions.complete) {
-                                    await requestFormVm
-                                        .complete(requestForm.id);
-                                  } else if (item == FormOptions.delete) {
-                                    return await ConfirmBox.displayDialog(
+                child: RefreshIndicator(
+                  onRefresh: () =>
+                      context.read<RequestFormViewModel>().getAll(),
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 10.0),
+                    itemBuilder: (context, index) {
+                      RequestForm requestForm = requestForms[index];
+                      return Card(
+                        elevation: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20.0,
+                            horizontal: 10.0,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // User
+                              ListTile(
+                                title: Text(
+                                  requestForm.user.name,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: kFS18),
+                                ),
+                                subtitle: Text(
+                                  dateTimeFormat.format(requestForm.createdAt),
+                                ),
+                                trailing: PopupMenuButton<FormOptions>(
+                                  onSelected: (FormOptions item) async {
+                                    final requestFormVm =
+                                        context.read<RequestFormViewModel>();
+                                    if (item == FormOptions.approve) {
+                                      await requestFormVm
+                                          .approve(requestForm.id);
+                                    } else if (item == FormOptions.cancel) {
+                                      await requestFormVm
+                                          .cancel(requestForm.id);
+                                    } else if (item == FormOptions.complete) {
+                                      await requestFormVm
+                                          .complete(requestForm.id);
+                                    } else if (item == FormOptions.delete) {
+                                      return await ConfirmBox.displayDialog(
+                                        context,
+                                        title: "Confirm Delete",
+                                        message:
+                                            "Are you sure you want to delete this form?",
+                                        confirmAction: () async {
+                                          await requestFormVm
+                                              .delete(requestForm.id);
+                                          Navigator.pop(context);
+                                          AlertSnack.showAlert(context,
+                                              text: requestFormVm.message!);
+                                        },
+                                      );
+                                    } else if (item == FormOptions.revert) {
+                                      await requestFormVm
+                                          .pending(requestForm.id);
+                                    }
+                                    AlertSnack.showAlert(context,
+                                        text: requestFormVm.message!,
+                                        type: requestFormVm.success
+                                            ? AlertSnackTypes.success
+                                            : AlertSnackTypes.error);
+                                  },
+                                  itemBuilder: (context) => getFormMenuItems(
                                       context,
-                                      title: "Confirm Delete",
-                                      message:
-                                          "Are you sure you want to delete this form?",
-                                      confirmAction: () async {
-                                        await requestFormVm
-                                            .delete(requestForm.id);
-                                        Navigator.pop(context);
-                                        AlertSnack.showAlert(context,
-                                            text: requestFormVm.message!);
-                                      },
-                                    );
-                                  } else if (item == FormOptions.revert) {
-                                    await requestFormVm.pending(requestForm.id);
-                                  }
-                                  AlertSnack.showAlert(context,
-                                      text: requestFormVm.message!,
-                                      type: requestFormVm.success
-                                          ? AlertSnackTypes.success
-                                          : AlertSnackTypes.error);
-                                },
-                                itemBuilder: (context) => getFormMenuItems(
-                                    context,
-                                    requestForm.status.title,
-                                    requestForm.id),
+                                      requestForm.status.title,
+                                      requestForm.id),
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            const Text("Order Information",
-                                style: TextStyle(
-                                  color: Colors.redAccent,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            const Divider(height: 10.0),
-                            OrderDetails(
-                                title: "Name: ", description: requestForm.name),
-                            OrderDetails(
-                                title: "Category: ",
-                                description: requestForm.category),
-                            OrderDetails(
-                                title: "Topic: ",
-                                description: requestForm.topic),
-                            OrderDetails(
-                                title: "Duration (days): ",
-                                description: requestForm.duration),
-                            OrderDetails(
-                                title: "No. of Slides: ",
-                                description: requestForm.slides),
-                            OrderDetails(
-                                title: "Phone Number: ",
-                                description: requestForm.phone),
-                            OrderDetails(
-                                title: "Email Address: ",
-                                description: requestForm.email),
-                            const SizedBox(height: 10.0),
-                            StatusLabel(requestForm.status.title)
-                          ],
+                              const SizedBox(height: 20),
+                              const Text("Order Information",
+                                  style: TextStyle(
+                                    color: Colors.redAccent,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              const Divider(height: 10.0),
+                              OrderDetails(
+                                  title: "Name: ",
+                                  description: requestForm.name),
+                              OrderDetails(
+                                  title: "Category: ",
+                                  description: requestForm.category),
+                              OrderDetails(
+                                  title: "Topic: ",
+                                  description: requestForm.topic),
+                              OrderDetails(
+                                  title: "Duration (days): ",
+                                  description: requestForm.duration),
+                              OrderDetails(
+                                  title: "No. of Slides: ",
+                                  description: requestForm.slides),
+                              OrderDetails(
+                                  title: "Phone Number: ",
+                                  description: requestForm.phone),
+                              OrderDetails(
+                                  title: "Email Address: ",
+                                  description: requestForm.email),
+                              const SizedBox(height: 10.0),
+                              StatusLabel(requestForm.status.title)
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  itemCount: requestForms.length,
+                      );
+                    },
+                    itemCount: requestForms.length,
+                  ),
                 ),
               )
             ],

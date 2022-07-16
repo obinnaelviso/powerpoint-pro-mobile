@@ -123,56 +123,62 @@ class _UserHomePanelState extends State<UserHomePanel> {
                 child: requestForms.isEmpty
                     ? const EmptyScreen(
                         "You currently have no active orders. \n Click the '+' button to make an order")
-                    : ListView.separated(
-                        itemBuilder: (context, index) {
-                          RequestForm requestForm = requestForms[index];
-                          return Card(
-                              child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListTile(
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  OrderDetails(
-                                      title: "Name: ",
-                                      description: requestForm.name),
-                                  const Divider(),
-                                  OrderDetails(
-                                      title: "Phone Number: ",
-                                      description: requestForm.phone),
-                                  OrderDetails(
-                                      title: "Email Address: ",
-                                      description: requestForm.email),
-                                  OrderDetails(
-                                      title: "Request No.: ",
-                                      description: requestForm.requestNo),
-                                  const SizedBox(height: 10.0),
-                                  StatusLabel(requestForm.status.title),
-                                ],
-                              ),
-                              subtitle: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(dateTimeFormat
-                                      .format(requestForm.createdAt)),
-                                  Visibility(
-                                    visible:
-                                        (requestForm.status.title == "pending"),
-                                    child: displayPaymentButton(
-                                        Provider.of<BankAccountsViewModel>(
-                                                context)
-                                            .loading,
-                                        index),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ));
-                        },
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 10.0),
-                        itemCount: requestForms.length))
+                    : RefreshIndicator(
+                        onRefresh: () => context
+                            .read<RequestFormViewModel>()
+                            .getActive(isUser: true),
+                        child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              RequestForm requestForm = requestForms[index];
+                              return Card(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListTile(
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      OrderDetails(
+                                          title: "Name: ",
+                                          description: requestForm.name),
+                                      const Divider(),
+                                      OrderDetails(
+                                          title: "Phone Number: ",
+                                          description: requestForm.phone),
+                                      OrderDetails(
+                                          title: "Email Address: ",
+                                          description: requestForm.email),
+                                      OrderDetails(
+                                          title: "Request No.: ",
+                                          description: requestForm.requestNo),
+                                      const SizedBox(height: 10.0),
+                                      StatusLabel(requestForm.status.title),
+                                    ],
+                                  ),
+                                  subtitle: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(dateTimeFormat
+                                          .format(requestForm.createdAt)),
+                                      Visibility(
+                                        visible: (requestForm.status.title ==
+                                            "pending"),
+                                        child: displayPaymentButton(
+                                            Provider.of<BankAccountsViewModel>(
+                                                    context)
+                                                .loading,
+                                            index),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ));
+                            },
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 10.0),
+                            itemCount: requestForms.length),
+                      ))
           ],
         ),
       ),

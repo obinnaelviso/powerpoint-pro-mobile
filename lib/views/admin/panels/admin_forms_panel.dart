@@ -91,90 +91,94 @@ class _AdminFormsPanelState extends State<AdminFormsPanel> {
     } else {
       return ModalProgressHUD(
         inAsyncCall: Provider.of<RequestFormViewModel>(context).loading,
-        child: ListView.builder(
-          itemCount: requestForms.length,
-          itemBuilder: (lvContext, index) {
-            final RequestForm requestForm = requestForms[index];
-            final String topic = requestForm.name;
-            final slidesCount = requestForm.slides;
-            final duration = requestForm.duration;
-            final String date = requestForm.createdAt.toString();
-            final String status = requestForm.status.title;
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: ListTile(
-                  // View Order
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) => ViewOrderModal(requestForm),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20),
+        child: RefreshIndicator(
+          onRefresh: () => context.read<RequestFormViewModel>().getAll(),
+          child: ListView.builder(
+            itemCount: requestForms.length,
+            itemBuilder: (lvContext, index) {
+              final RequestForm requestForm = requestForms[index];
+              final String topic = requestForm.name;
+              final slidesCount = requestForm.slides;
+              final duration = requestForm.duration;
+              final String date = requestForm.createdAt.toString();
+              final String status = requestForm.status.title;
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: ListTile(
+                    // View Order
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => ViewOrderModal(requestForm),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
                         ),
+                      );
+                    },
+                    leading: const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Icon(
+                        Icons.pie_chart,
+                        size: 40,
+                        color: Colors.red,
                       ),
-                    );
-                  },
-                  leading: const Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                    child: Icon(
-                      Icons.pie_chart,
-                      size: 40,
-                      color: Colors.red,
+                    ),
+                    title: Text(topic),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            "No. of Slides: $slidesCount, Duration: $duration days"),
+                        Text("Date: $date"),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        StatusLabel(status)
+                      ],
+                    ),
+                    trailing: PopupMenuButton<FormOptions>(
+                      onSelected: (FormOptions item) async {
+                        final requestFormVm =
+                            context.read<RequestFormViewModel>();
+                        if (item == FormOptions.approve) {
+                          await requestFormVm.approve(requestForm.id);
+                        } else if (item == FormOptions.cancel) {
+                          await requestFormVm.cancel(requestForm.id);
+                        } else if (item == FormOptions.complete) {
+                          await requestFormVm.complete(requestForm.id);
+                        } else if (item == FormOptions.delete) {
+                          return await ConfirmBox.displayDialog(
+                            context,
+                            title: "Confirm Delete",
+                            message:
+                                "Are you sure you want to delete this form?",
+                            confirmAction: () async {
+                              await requestFormVm.delete(requestForm.id);
+                              Navigator.pop(context);
+                              AlertSnack.showAlert(context,
+                                  text: requestFormVm.message!);
+                            },
+                          );
+                        } else if (item == FormOptions.revert) {
+                          await requestFormVm.pending(requestForm.id);
+                        }
+                        AlertSnack.showAlert(context,
+                            text: requestFormVm.message!,
+                            type: requestFormVm.success
+                                ? AlertSnackTypes.success
+                                : AlertSnackTypes.error);
+                      },
+                      itemBuilder: (context) => getFormMenuItems(
+                          context, requestForm.status.title, requestForm.id),
                     ),
                   ),
-                  title: Text(topic),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                          "No. of Slides: $slidesCount, Duration: $duration days"),
-                      Text("Date: $date"),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      StatusLabel(status)
-                    ],
-                  ),
-                  trailing: PopupMenuButton<FormOptions>(
-                    onSelected: (FormOptions item) async {
-                      final requestFormVm =
-                          context.read<RequestFormViewModel>();
-                      if (item == FormOptions.approve) {
-                        await requestFormVm.approve(requestForm.id);
-                      } else if (item == FormOptions.cancel) {
-                        await requestFormVm.cancel(requestForm.id);
-                      } else if (item == FormOptions.complete) {
-                        await requestFormVm.complete(requestForm.id);
-                      } else if (item == FormOptions.delete) {
-                        return await ConfirmBox.displayDialog(
-                          context,
-                          title: "Confirm Delete",
-                          message: "Are you sure you want to delete this form?",
-                          confirmAction: () async {
-                            await requestFormVm.delete(requestForm.id);
-                            Navigator.pop(context);
-                            AlertSnack.showAlert(context,
-                                text: requestFormVm.message!);
-                          },
-                        );
-                      } else if (item == FormOptions.revert) {
-                        await requestFormVm.pending(requestForm.id);
-                      }
-                      AlertSnack.showAlert(context,
-                          text: requestFormVm.message!,
-                          type: requestFormVm.success
-                              ? AlertSnackTypes.success
-                              : AlertSnackTypes.error);
-                    },
-                    itemBuilder: (context) => getFormMenuItems(
-                        context, requestForm.status.title, requestForm.id),
-                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       );
     }

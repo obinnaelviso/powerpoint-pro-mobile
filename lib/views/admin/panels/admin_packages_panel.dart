@@ -54,91 +54,94 @@ class _AdminPackagesPanelState extends State<AdminPackagesPanel> {
     } else {
       return ModalProgressHUD(
         inAsyncCall: Provider.of<PackagesViewModel>(context).loading,
-        child: ListView.builder(
-          itemCount: _packages.length,
-          itemBuilder: (lvContext, index) {
-            final Package _package = _packages[index];
-            final String? _title = _package.title;
-            final String? _durationRange =
-                "${_package.minDuration} - ${_package.maxDuration}";
-            final String? _slidesRange =
-                "${_package.minSlides} - ${_package.maxSlides}";
-            final String? _amount = _package.amount;
-            final String? _amountString = _package.amountString;
-            final _amountController = TextEditingController();
-            return Card(
-              child: ListTile(
-                title: Row(children: [
-                  Text(_title ?? ""),
-                  const Text(" - "),
-                  Text(
-                    _amountString ?? "",
-                    style: const TextStyle(color: Colors.red),
+        child: RefreshIndicator(
+          onRefresh: () => context.read<PackagesViewModel>().getAll(),
+          child: ListView.builder(
+            itemCount: _packages.length,
+            itemBuilder: (lvContext, index) {
+              final Package _package = _packages[index];
+              final String? _title = _package.title;
+              final String? _durationRange =
+                  "${_package.minDuration} - ${_package.maxDuration}";
+              final String? _slidesRange =
+                  "${_package.minSlides} - ${_package.maxSlides}";
+              final String? _amount = _package.amount;
+              final String? _amountString = _package.amountString;
+              final _amountController = TextEditingController();
+              return Card(
+                child: ListTile(
+                  title: Row(children: [
+                    Text(_title ?? ""),
+                    const Text(" - "),
+                    Text(
+                      _amountString ?? "",
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ]),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(children: [
+                        const Text("Slides: "),
+                        Text(_slidesRange ?? "")
+                      ]),
+                      Row(children: [
+                        const Text("Duration: "),
+                        Text(_durationRange ?? "")
+                      ]),
+                    ],
                   ),
-                ]),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(children: [
-                      const Text("Slides: "),
-                      Text(_slidesRange ?? "")
-                    ]),
-                    Row(children: [
-                      const Text("Duration: "),
-                      Text(_durationRange ?? "")
-                    ]),
-                  ],
-                ),
-                trailing: PopupMenuButton<FormOptions>(
-                  onSelected: (FormOptions item) async {
-                    final packagesVm = context.read<PackagesViewModel>();
-                    if (item == FormOptions.edit) {
-                      _amountController.text = _amount ?? "";
-                      await showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) => SingleChildScrollView(
-                          child: BottomFormModal(
-                            loading:
-                                Provider.of<PackagesViewModel>(context).loading,
-                            action: () async {
-                              await packagesVm.update(
-                                _package.id,
-                                {
-                                  "amount": _amountController.text,
-                                },
-                              );
-                              AlertSnack.showAlert(context,
-                                  text: packagesVm.message!,
-                                  type: packagesVm.success
-                                      ? AlertSnackTypes.success
-                                      : AlertSnackTypes.error);
-                              Navigator.pop(context);
-                            },
-                            actionText: "Update",
-                            children: [
-                              FormInput(
-                                label: "Amount",
-                                autofocus: true,
-                                required: true,
-                                controller: _amountController,
-                              ),
-                            ],
+                  trailing: PopupMenuButton<FormOptions>(
+                    onSelected: (FormOptions item) async {
+                      final packagesVm = context.read<PackagesViewModel>();
+                      if (item == FormOptions.edit) {
+                        _amountController.text = _amount ?? "";
+                        await showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) => SingleChildScrollView(
+                            child: BottomFormModal(
+                              loading: Provider.of<PackagesViewModel>(context)
+                                  .loading,
+                              action: () async {
+                                await packagesVm.update(
+                                  _package.id,
+                                  {
+                                    "amount": _amountController.text,
+                                  },
+                                );
+                                AlertSnack.showAlert(context,
+                                    text: packagesVm.message!,
+                                    type: packagesVm.success
+                                        ? AlertSnackTypes.success
+                                        : AlertSnackTypes.error);
+                                Navigator.pop(context);
+                              },
+                              actionText: "Update",
+                              children: [
+                                FormInput(
+                                  label: "Amount",
+                                  autofocus: true,
+                                  required: true,
+                                  controller: _amountController,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  },
-                  itemBuilder: (context) => getMenuItems(context),
+                        );
+                      }
+                    },
+                    itemBuilder: (context) => getMenuItems(context),
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       );
     }
