@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:powerpoint_pro/view_models/bank_account_view_model.dart';
+import 'package:powerpoint_pro/view_models/bank_accounts_view_model.dart';
 import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
 import 'package:powerpoint_pro/views/components/empty_screen.dart';
 import 'package:powerpoint_pro/views/components/payment_modal.dart';
@@ -45,7 +45,7 @@ class _UserHomePanelState extends State<UserHomePanel> {
           child: const Text('Pay'),
           onPressed: () async {
             selectedListItem = currentIndex;
-            await Provider.of<BankAccountViewModel>(context, listen: false)
+            await Provider.of<BankAccountsViewModel>(context, listen: false)
                 .getAll();
             showModalBottomSheet(
               context: context,
@@ -108,7 +108,7 @@ class _UserHomePanelState extends State<UserHomePanel> {
                     ),
                     trailing: (status == "pending")
                         ? displayPaymentButton(
-                            Provider.of<BankAccountViewModel>(context).loading,
+                            Provider.of<BankAccountsViewModel>(context).loading,
                             index)
                         : null,
                   ),

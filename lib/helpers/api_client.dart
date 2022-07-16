@@ -105,7 +105,7 @@ class ApiClient {
     _headers[HttpHeaders.authorizationHeader] = "Bearer $token";
   }
 
-  Uri getRoute(String path, {bool rawUrl = true}) {
+  Uri getRoute(String path, {bool rawUrl = false}) {
     return Uri.parse(rawUrl ? path : baseUrl + path);
   }
 }

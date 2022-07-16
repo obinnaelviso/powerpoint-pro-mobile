@@ -5,11 +5,11 @@ import 'package:powerpoint_pro/models/package.dart';
 import 'package:powerpoint_pro/view_models/base_view_model.dart';
 
 class PackagesViewModel extends BaseViewModel {
-  List<BankAccount> _packages = [];
+  List<Package> _packages = [];
   UnmodifiableListView get packages => UnmodifiableListView(_packages);
 
-  BankAccount? _package;
-  BankAccount? get package => _package;
+  Package? _package;
+  Package? get package => _package;
 
   Future<void> getAll() async {
     setLoading(true);
@@ -20,7 +20,7 @@ class PackagesViewModel extends BaseViewModel {
       if (response.data == null) {
         setPackages([]);
       } else {
-        setPackages(response.data as List<Map<String, dynamic>>);
+        setPackages(response.data as List<dynamic>);
       }
     }
 
@@ -52,14 +52,37 @@ class PackagesViewModel extends BaseViewModel {
     setLoading(false);
   }
 
-  void setPackages(List<Map<String, dynamic>> packagesJson) {
+  Future<void> update(int packageId, Map<String, String> form) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+
+    var response = await api.put("/packages/$packageId", form);
+
+    if (response is Success) {
+      getAll();
+      setSuccess(true);
+      setFailure(false);
+    }
+
+    if (response is Failure) {
+      setErrors(response.data);
+      setSuccess(false);
+      setFailure(true);
+    }
+
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  void setPackages(List<dynamic> packagesJson) {
     _packages =
-        packagesJson.map((package) => BankAccount.fromMap(package)).toList();
+        packagesJson.map((package) => Package.fromMap(package)).toList();
     notifyListeners();
   }
 
   void setPackage(Map<String, dynamic> packageJson) {
-    _package = BankAccount.fromMap(packageJson);
+    _package = Package.fromMap(packageJson);
     notifyListeners();
   }
 }

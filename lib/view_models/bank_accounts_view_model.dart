@@ -1,43 +1,47 @@
 import 'dart:collection';
 
 import 'package:powerpoint_pro/helpers/api_status.dart';
-import 'package:powerpoint_pro/models/category.dart';
+import 'package:powerpoint_pro/models/bank_account.dart';
 import 'package:powerpoint_pro/view_models/base_view_model.dart';
 
-class CategoriesViewModel extends BaseViewModel {
-  List<Category> _categories = [];
-  UnmodifiableListView get categories => UnmodifiableListView(_categories);
+class BankAccountsViewModel extends BaseViewModel {
+  List<BankAccount> _bankAccounts = [];
+  UnmodifiableListView get bankAccounts => UnmodifiableListView(_bankAccounts);
 
-  Category? _category;
-  Category? get category => _category;
+  BankAccount? _bankAccount;
+  BankAccount? get bankAccount => _bankAccount;
 
   Future<void> getAll() async {
     setLoading(true);
     setMessage("");
     setErrors({});
-    var response = await api.get("/categories");
+    var response = await api.get("/bank-accounts");
     if (response is Success) {
       if (response.data == null) {
-        setCategories([]);
+        setBankAccounts([]);
       } else {
-        setCategories(response.data as List<dynamic>);
+        setBankAccounts(response.data as List<dynamic>);
       }
+      setSuccess(true);
+      setFailure(false);
     }
 
     if (response is Failure) {
       setErrors(response.data);
+      setFailure(true);
+      setSuccess(false);
     }
 
     setMessage(response.message ?? "");
     setLoading(false);
   }
 
-  Future<void> delete(int categoryId) async {
+  Future<void> delete(int bankAccountId) async {
     setLoading(true);
     setMessage("");
     setErrors({});
 
-    var response = await api.delete("/categories/$categoryId");
+    var response = await api.delete("/bank-accounts/$bankAccountId");
 
     if (response is Success) {
       await getAll();
@@ -60,7 +64,7 @@ class CategoriesViewModel extends BaseViewModel {
     setMessage("");
     setErrors({});
 
-    var response = await api.post("/categories", form);
+    var response = await api.post("/bank-accounts", form);
 
     if (response is Success) {
       getAll();
@@ -78,12 +82,12 @@ class CategoriesViewModel extends BaseViewModel {
     setMessage(response.message ?? "");
   }
 
-  Future<void> update(int categoryId, Map<String, String> form) async {
+  Future<void> update(int bankAccountId, Map<String, String> form) async {
     setLoading(true);
     setMessage("");
     setErrors({});
 
-    var response = await api.put("/categories/$categoryId", form);
+    var response = await api.put("/bank-accounts/$bankAccountId", form);
 
     if (response is Success) {
       getAll();
@@ -101,9 +105,15 @@ class CategoriesViewModel extends BaseViewModel {
     setMessage(response.message ?? "");
   }
 
-  void setCategories(List<dynamic> categoriesJson) {
-    _categories =
-        categoriesJson.map((category) => Category.fromMap(category)).toList();
+  void setBankAccounts(List<dynamic> bankAccountsJson) {
+    _bankAccounts = bankAccountsJson
+        .map((bankAccount) => BankAccount.fromMap(bankAccount))
+        .toList();
+    notifyListeners();
+  }
+
+  void setBankAccount(Map<String, dynamic> bankAccountJson) {
+    _bankAccount = BankAccount.fromMap(bankAccountJson);
     notifyListeners();
   }
 }

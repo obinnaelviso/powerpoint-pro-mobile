@@ -3,7 +3,6 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:powerpoint_pro/helpers/constants.dart';
 import 'package:powerpoint_pro/models/request_form.dart';
 import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
-import 'package:powerpoint_pro/views/admin/admin_main_screen.dart';
 import 'package:powerpoint_pro/views/components/alert_snack.dart';
 import 'package:powerpoint_pro/views/components/confirm_box.dart';
 import 'package:powerpoint_pro/views/components/empty_screen.dart';
@@ -149,21 +148,21 @@ class _AdminFormsPanelState extends State<AdminFormsPanel> {
                       } else if (item == FormOptions.complete) {
                         await requestFormVm.complete(requestForm.id);
                       } else if (item == FormOptions.delete) {
-                        return ConfirmBox.displayDialog(
-                          scaffoldKey.currentContext!,
+                        return await ConfirmBox.displayDialog(
+                          context,
                           title: "Confirm Delete",
                           message: "Are you sure you want to delete this form?",
                           confirmAction: () async {
                             await requestFormVm.delete(requestForm.id);
                             Navigator.pop(context);
-                            AlertSnack.showAlert(scaffoldKey.currentContext!,
+                            AlertSnack.showAlert(context,
                                 text: requestFormVm.message!);
                           },
                         );
                       } else if (item == FormOptions.revert) {
                         await requestFormVm.pending(requestForm.id);
                       }
-                      AlertSnack.showAlert(scaffoldKey.currentContext!,
+                      AlertSnack.showAlert(context,
                           text: requestFormVm.message!,
                           type: requestFormVm.success
                               ? AlertSnackTypes.success

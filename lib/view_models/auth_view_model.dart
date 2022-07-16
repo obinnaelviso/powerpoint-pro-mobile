@@ -10,6 +10,9 @@ class AuthViewModel extends BaseViewModel {
   User? _user;
   User? get user => _user;
 
+  String _currentEmail = "";
+  String get currentEmail => _currentEmail;
+
   Future<void> login(Map<String, dynamic> credentials) async {
     setLoading(true);
     setMessage("");
@@ -36,7 +39,7 @@ class AuthViewModel extends BaseViewModel {
     var response = await api.post("/logout", {});
     if (response is Success) {
       setToken("");
-      setRole("");
+      _setRole("");
       setSuccess(true);
       setFailure(false);
     }
@@ -44,6 +47,61 @@ class AuthViewModel extends BaseViewModel {
       setErrors(response.data);
       setSuccess(false);
       setFailure(true);
+    }
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> sendOtp(Map<String, dynamic> credentials) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+    var response = await api.post("/otp/email", credentials);
+    if (response is Success) {
+      setSuccess(true);
+      setFailure(false);
+      _setCurrentEmail(credentials["email"]);
+    }
+    if (response is Failure) {
+      setSuccess(false);
+      setFailure(true);
+      setErrors(response.data);
+    }
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> verifyOtp(Map<String, dynamic> credentials) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+    var response = await api.post("/verify/email", credentials);
+    if (response is Success) {
+      setSuccess(true);
+      setFailure(false);
+    }
+    if (response is Failure) {
+      setSuccess(false);
+      setFailure(true);
+      setErrors(response.data);
+    }
+    setLoading(false);
+    setMessage(response.message ?? "");
+  }
+
+  Future<void> changePassword(Map<String, dynamic> credentials) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+    var response = await api.post("/reset-password", credentials);
+    if (response is Success) {
+      setSuccess(true);
+      setFailure(false);
+    }
+    if (response is Failure) {
+      setSuccess(false);
+      setFailure(true);
+      setErrors(response.data);
     }
     setLoading(false);
     setMessage(response.message ?? "");
@@ -67,6 +125,22 @@ class AuthViewModel extends BaseViewModel {
     setMessage(response.message ?? "");
   }
 
+  void setUser(Map<String, dynamic> userJson) {
+    _user = User.fromMap(userJson);
+    _setRole(_user!.role!);
+    notifyListeners();
+  }
+
+  void _setRole(String role) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("role", role);
+  }
+
+  void _setCurrentEmail(String email) {
+    _currentEmail = email;
+    notifyListeners();
+  }
+
   Future<String?> _getDeviceInfo() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -80,16 +154,5 @@ class AuthViewModel extends BaseViewModel {
       return iosDeviceInfo.model;
     }
     return null;
-  }
-
-  void setUser(Map<String, dynamic> userJson) {
-    _user = User.fromMap(userJson);
-    setRole(_user!.role!);
-    notifyListeners();
-  }
-
-  void setRole(String role) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString("role", role);
   }
 }

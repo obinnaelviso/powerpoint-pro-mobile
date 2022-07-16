@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:powerpoint_pro/models/status.dart';
 
-class BankAccount {
-  BankAccount({
-    this.id,
+class Package {
+  Package({
+    required this.id,
     this.title,
     this.description,
     this.minDuration,
@@ -16,7 +16,7 @@ class BankAccount {
     this.status,
   });
 
-  int? id;
+  int id;
   String? title;
   String? description;
   dynamic minDuration;
@@ -27,12 +27,11 @@ class BankAccount {
   String? amountString;
   Status? status;
 
-  factory BankAccount.fromJson(String str) =>
-      BankAccount.fromMap(json.decode(str));
+  factory Package.fromJson(String str) => Package.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory BankAccount.fromMap(Map<String, dynamic> json) => BankAccount(
+  factory Package.fromMap(Map<String, dynamic> json) => Package(
         id: json["id"],
         title: json["title"],
         description: json["description"],

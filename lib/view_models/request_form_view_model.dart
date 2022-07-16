@@ -197,15 +197,12 @@ class RequestFormViewModel extends BaseViewModel {
     setMessage(response.message ?? "");
   }
 
-  Future<void> download(String downloadUrl) async {
+  Future<void> download(String downloadUrl, File file) async {
     setLoading(true);
     setMessage("");
     setErrors({});
 
-    var response = await api.get(
-      downloadUrl,
-      rawUrl: true,
-    );
+    var response = await api.download(downloadUrl, file);
 
     if (response is Success) {
       await getAll(isUser: false);

@@ -4,15 +4,15 @@ import 'package:powerpoint_pro/models/status.dart';
 
 class Category {
   Category({
-    this.id,
-    this.title,
+    required this.id,
+    required this.title,
     this.description,
     this.status,
   });
 
-  int? id;
-  String? title;
-  dynamic description;
+  int id;
+  String title;
+  String? description;
   Status? status;
 
   factory Category.fromJson(String str) => Category.fromMap(json.decode(str));

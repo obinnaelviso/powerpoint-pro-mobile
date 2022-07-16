@@ -29,127 +29,115 @@ class RegistrationScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
         inAsyncCall: Provider.of<AuthViewModel>(context).loading,
-        child: SafeArea(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            TitleText('Create New Account'),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                        FormInput(
-                            label: 'First Name',
-                            controller: firstNameController),
-                        ErrorText(
-                            error:
-                                authVMProvider(context).errors["first_name"]),
-                        const SizedBox(height: 20),
-                        FormInput(
-                            label: 'Last Name', controller: lastNameController),
-                        ErrorText(
-                            error: authVMProvider(context).errors["last_name"]),
-                        const SizedBox(height: 20),
-                        FormInput(
-                          label: 'Phone Number',
-                          type: TextInputType.phone,
-                          controller: phoneController,
-                        ),
-                        ErrorText(
-                            error: authVMProvider(context).errors["phone"]),
-                        const SizedBox(height: 20),
-                        FormInput(
-                            label: 'Email',
-                            type: TextInputType.emailAddress,
-                            controller: emailController),
-                        ErrorText(
-                            error: authVMProvider(context).errors["email"]),
-                        const SizedBox(height: 20),
-                        FormInput(
-                          label: 'Password',
-                          controller: passwordController,
-                          hideText: true,
-                        ),
-                        ErrorText(
-                            error: authVMProvider(context).errors["password"]),
-                        const SizedBox(height: 20),
-                        FormInput(
-                          label: 'Confirm Password',
-                          controller: passwordConfirmController,
-                          hideText: true,
-                        ),
-                        const SizedBox(height: 30),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () async {
-                                await context.read<AuthViewModel>().register({
-                                  "first_name": firstNameController.text,
-                                  "last_name": lastNameController.text,
-                                  "phone": phoneController.text,
-                                  "email": emailController.text,
-                                  "password": passwordController.text,
-                                  "password_confirmation":
-                                      passwordConfirmController.text
-                                });
-                                if (context
-                                    .read<AuthViewModel>()
-                                    .errors
-                                    .isNotEmpty) {
-                                  passwordController.clear();
-                                  passwordConfirmController.clear();
-                                } else {
-                                  Navigator.pushReplacementNamed(
-                                      context, UserMainScreen.route);
-                                }
-                              },
-                              child: const Text('SIGN UP'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          TitleText('Create New Account'),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+                      FormInput(
+                          label: 'First Name', controller: firstNameController),
+                      ErrorText(
+                          error: authVMProvider(context).errors["first_name"]),
+                      const SizedBox(height: 20),
+                      FormInput(
+                          label: 'Last Name', controller: lastNameController),
+                      ErrorText(
+                          error: authVMProvider(context).errors["last_name"]),
+                      const SizedBox(height: 20),
+                      FormInput(
+                        label: 'Phone Number',
+                        type: TextInputType.phone,
+                        controller: phoneController,
+                      ),
+                      ErrorText(error: authVMProvider(context).errors["phone"]),
+                      const SizedBox(height: 20),
+                      FormInput(
+                          label: 'Email',
+                          type: TextInputType.emailAddress,
+                          controller: emailController),
+                      ErrorText(error: authVMProvider(context).errors["email"]),
+                      const SizedBox(height: 20),
+                      FormInput(
+                        label: 'Password',
+                        controller: passwordController,
+                        hideText: true,
+                      ),
+                      ErrorText(
+                          error: authVMProvider(context).errors["password"]),
+                      const SizedBox(height: 20),
+                      FormInput(
+                        label: 'Confirm Password',
+                        controller: passwordConfirmController,
+                        hideText: true,
+                      ),
+                      const SizedBox(height: 30),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              await context.read<AuthViewModel>().register({
+                                "first_name": firstNameController.text,
+                                "last_name": lastNameController.text,
+                                "phone": phoneController.text,
+                                "email": emailController.text,
+                                "password": passwordController.text,
+                                "password_confirmation":
+                                    passwordConfirmController.text
+                              });
+                              if (context
+                                  .read<AuthViewModel>()
+                                  .errors
+                                  .isNotEmpty) {
+                                passwordController.clear();
+                                passwordConfirmController.clear();
+                              } else {
+                                Navigator.pushReplacementNamed(
+                                    context, UserMainScreen.route);
+                              }
+                            },
+                            child: const Text('SIGN UP'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Already have an account?",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 20.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Already have an account?",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                              ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              'Sign In',
                             ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text(
-                                'Sign In',
-                              ),
-                              style: kTextButtonStyle,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                            style: kTextButtonStyle,
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

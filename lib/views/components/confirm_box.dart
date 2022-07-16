@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class ConfirmBox {
   ConfirmBox._();
 
-  static void displayDialog(BuildContext context,
+  static Future<void> displayDialog(BuildContext context,
       {bool loading = false,
       required String title,
       required String message,
       String confirmText = 'Yes',
       String cancelText = 'No',
-      required void Function() confirmAction}) {
-    showDialog<String>(
+      required Function() confirmAction}) async {
+    await showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(title),

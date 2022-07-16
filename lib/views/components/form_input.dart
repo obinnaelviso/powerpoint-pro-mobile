@@ -5,6 +5,7 @@ class FormInput extends StatefulWidget {
       {Key? key,
       this.label = '',
       this.controller,
+      this.autofocus = false,
       this.onInput,
       this.type,
       this.hideText = false,
@@ -15,6 +16,7 @@ class FormInput extends StatefulWidget {
   final TextInputType? type;
   final bool hideText;
   final bool required;
+  final bool autofocus;
   final TextEditingController? controller;
 
   @override
@@ -27,6 +29,7 @@ class _FormInputState extends State<FormInput> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      autofocus: widget.autofocus,
       obscureText: (widget.hideText && _isPasswordHidden),
       keyboardType: widget.type,
       cursorColor: Colors.black,

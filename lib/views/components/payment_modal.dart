@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:powerpoint_pro/view_models/bank_account_view_model.dart';
+import 'package:powerpoint_pro/view_models/bank_accounts_view_model.dart';
 import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
 import 'package:powerpoint_pro/views/components/alert_snack.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
@@ -59,7 +59,7 @@ class _PaymentModalState extends State<PaymentModal> {
   @override
   Widget build(BuildContext context) {
     List<dynamic> bankAccounts =
-        Provider.of<BankAccountViewModel>(context).bankAccounts;
+        Provider.of<BankAccountsViewModel>(context).bankAccounts;
     return Container(
       padding: EdgeInsets.only(
         top: 30,

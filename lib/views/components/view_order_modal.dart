@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:powerpoint_pro/helpers/constants.dart';
 import 'package:powerpoint_pro/models/request_form.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
 
@@ -10,10 +8,10 @@ class ViewOrderModal extends StatelessWidget {
 
   const ViewOrderModal(this.requestForm, {Key? key}) : super(key: key);
 
-  Future<void> downloadFile(String path, String name) async {
-    final appStorage = await getApplicationDocumentsDirectory();
-    final file = File('${appStorage.path}/$name');
-  }
+  // Future<void> downloadFile(String path, String name) async {
+  //   final appStorage = await getApplicationDocumentsDirectory();
+  //   final file = File('${appStorage.path}/$name');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +162,8 @@ class ViewOrderModal extends StatelessWidget {
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 )
                               : ElevatedButton(
-                                  onPressed: () async {
-                                    await downloadFile(requestForm.receiptUrl);
+                                  onPressed: () {
+                                    // await downloadFile(requestForm.receiptUrl);
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -175,8 +173,8 @@ class ViewOrderModal extends StatelessWidget {
                                     ],
                                   ),
                                   style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 10),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 0),
                                   )),
                         ),
                       ),
@@ -185,11 +183,11 @@ class ViewOrderModal extends StatelessWidget {
                       child: Card(
                         child: ListTile(
                           title: const Text(
-                            "Duration (Days) ",
+                            "Date ",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            requestForm.duration,
+                            dateTimeFormat.format(requestForm.createdAt),
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
