@@ -33,7 +33,7 @@ class PackagesViewModel extends BaseViewModel {
   }
 
   Future<void> searchPackage(
-      {required int duration, required int slides}) async {
+      {required String duration, required String slides}) async {
     setLoading(true);
     setMessage("");
     setErrors({});

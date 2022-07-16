@@ -42,48 +42,64 @@ class _UserMainScreenState extends State<UserMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${kUserPanels[_selectedIndex]["title"]}"),
-        leading: const Padding(
-          padding: EdgeInsets.all(5.0),
-          child: Image(image: AssetImage("assets/images/logo64.png")),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => showDialog<String>(
-                context: context,
-                builder: (context) => AlertDialog(
-                      title: const Text("Confirm Logout"),
-                      content: const Text(
-                          "Are you sure you want to log out of this application?"),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("No")),
-                        TextButton(
-                          onPressed: () async {
-                            await context.read<AuthViewModel>().logout();
-                            if (context.read<AuthViewModel>().success) {
-                              Navigator.pushReplacementNamed(
-                                  context, LoginScreen.route);
-                            }
-                          },
-                          child: Provider.of<AuthViewModel>(context).loading
-                              ? const SizedBox(
-                                  child: CircularProgressIndicator(),
-                                  height: 20,
-                                  width: 20,
+          title: Text("${kUserPanels[_selectedIndex]["title"]}"),
+          leading: const Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Image(image: AssetImage("assets/images/logo64.png")),
+          ),
+          actions: [
+            PopupMenuButton<int>(
+                onSelected: (int item) async {
+                  if (item == 4) {
+                    await showDialog<String>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text("Confirm Logout"),
+                              content: const Text(
+                                  "Are you sure you want to log out of this application?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("No")),
+                                TextButton(
+                                  onPressed: () async {
+                                    await context
+                                        .read<AuthViewModel>()
+                                        .logout();
+                                    if (context.read<AuthViewModel>().success) {
+                                      Navigator.pushReplacementNamed(
+                                          context, LoginScreen.route);
+                                    }
+                                  },
+                                  child: Provider.of<AuthViewModel>(context)
+                                          .loading
+                                      ? const SizedBox(
+                                          child: CircularProgressIndicator(),
+                                          height: 20,
+                                          width: 20,
+                                        )
+                                      : const Text("Yes"),
                                 )
-                              : const Text("Yes"),
-                        )
-                      ],
-                    )),
-            icon: const Icon(Icons.logout),
-            tooltip: "Logout",
-          )
-        ],
-      ),
+                              ],
+                            ));
+                  } else {
+                    setState(() {
+                      _selectedIndex = item;
+                    });
+                  }
+                },
+                itemBuilder: (context) => <PopupMenuEntry<int>>[
+                      PopupMenuItem(
+                          child: Text("${kUserPanels[0]["title"]}"), value: 0),
+                      PopupMenuItem(
+                          child: Text("${kUserPanels[1]["title"]}"), value: 1),
+                      PopupMenuItem(
+                          child: Text("${kUserPanels[2]["title"]}"), value: 2),
+                      const PopupMenuItem(child: Text("Logout"), value: 4),
+                    ])
+          ]),
       body: kUserPanels[_selectedIndex]["panel"],
       floatingActionButton: FloatingActionButton(
         tooltip: "Make a Request",
@@ -93,27 +109,6 @@ class _UserMainScreenState extends State<UserMainScreen> {
         onPressed: () {
           Navigator.pushNamed(context, UserCreateFormScreen.route);
         },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        onTap: (int index) {
-          if (index < kUserPanels.length) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          }
-        },
-        currentIndex: _selectedIndex,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: "Forms",
-          ),
-        ],
       ),
     );
   }

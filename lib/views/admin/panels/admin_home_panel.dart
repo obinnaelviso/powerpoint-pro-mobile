@@ -5,6 +5,7 @@ import 'package:powerpoint_pro/models/request_form.dart';
 import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
 import 'package:powerpoint_pro/views/components/alert_snack.dart';
 import 'package:powerpoint_pro/views/components/confirm_box.dart';
+import 'package:powerpoint_pro/views/components/order_details.dart';
 import 'package:powerpoint_pro/views/components/status_label.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
 import 'package:provider/provider.dart';
@@ -214,33 +215,5 @@ class _AdminHomePanelState extends State<AdminHomePanel> {
             ],
           ),
         ));
-  }
-}
-
-class OrderDetails extends StatelessWidget {
-  const OrderDetails({
-    Key? key,
-    required this.title,
-    this.description,
-  }) : super(key: key);
-
-  final String title;
-  final String? description;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: kFS16),
-        ),
-        Text(
-          description ?? "",
-          style: const TextStyle(fontSize: kFS18),
-        ),
-      ],
-    );
   }
 }

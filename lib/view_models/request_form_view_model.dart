@@ -41,6 +41,35 @@ class RequestFormViewModel extends BaseViewModel {
     setLoading(false);
   }
 
+  Future<void> getActive({bool isUser = true}) async {
+    setLoading(true);
+    setMessage("");
+    setErrors({});
+    String url = "";
+    if (isUser) {
+      url = "/request-forms";
+    } else {
+      url = "/request-forms/all";
+    }
+    var response = await api.get("$url?q=active");
+    if (response is Success) {
+      if (response.data == null) {
+        setRequestForms([]);
+      } else {
+        setRequestForms(response.data as List<dynamic>);
+      }
+      setSuccess(true);
+      setFailure(false);
+    }
+
+    if (response is Failure) {
+      setErrors(response.data);
+      setFailure(true);
+      setSuccess(false);
+    }
+    setLoading(false);
+  }
+
   Future<void> getSingle(int id) async {
     setLoading(true);
     setMessage("");

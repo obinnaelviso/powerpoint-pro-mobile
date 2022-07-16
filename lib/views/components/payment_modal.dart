@@ -11,8 +11,10 @@ import 'package:provider/provider.dart';
 
 class PaymentModal extends StatefulWidget {
   final int id;
+  final String amount;
 
-  const PaymentModal(this.id, {Key? key}) : super(key: key);
+  const PaymentModal(this.id, {Key? key, required this.amount})
+      : super(key: key);
 
   @override
   State<PaymentModal> createState() => _PaymentModalState();
@@ -28,7 +30,14 @@ class _PaymentModalState extends State<PaymentModal> {
           .map((bankAccount) => Column(
                 children: [
                   Row(children: [
-                    const Text("Bank Name: ",
+                    const Text("Account Number: ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text("${bankAccount.accountNumber}",
+                        style: const TextStyle(fontSize: 18)),
+                  ]),
+                  Row(children: [
+                    const Text("Bank: ",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18)),
                     Text("${bankAccount.bankName}",
@@ -41,14 +50,18 @@ class _PaymentModalState extends State<PaymentModal> {
                     Text("${bankAccount.accountName}",
                         style: const TextStyle(fontSize: 18)),
                   ]),
-                  Row(children: [
-                    const Text("Account Number: ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18)),
-                    Text("${bankAccount.accountNumber}",
-                        style: const TextStyle(fontSize: 18)),
-                  ]),
-                  const SizedBox(height: 20),
+                  Visibility(
+                    visible: ((bankAccounts.indexOf(bankAccount)) !=
+                        (bankAccounts.length - 1)),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text("- OR -",
+                          style: TextStyle(
+                            color: Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                  ),
                 ],
               ))
           .toList();
@@ -69,15 +82,17 @@ class _PaymentModalState extends State<PaymentModal> {
       ),
       child: Column(
         children: [
-          const TitleText("Upload proof of Payment"),
+          const TitleText("Make Payment"),
           const SizedBox(height: 20),
-          const Text("Make payment to the following account: ",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(
+              "You are to make the total amount of ${widget.amount} to the following account details",
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 20),
           Column(children: getBankAccounts(bankAccounts)),
           const SizedBox(height: 20),
-          const Text("Click the button below to upload proof of payment"),
-          const SizedBox(height: 30),
+          const Text("Click button below to upload proof of payment"),
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () async {
               FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -115,7 +130,7 @@ class _PaymentModalState extends State<PaymentModal> {
             selectedFilePath,
             style: const TextStyle(fontSize: 18),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

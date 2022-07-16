@@ -6,6 +6,7 @@ import 'package:powerpoint_pro/models/user.dart';
 class RequestForm {
   RequestForm({
     required this.id,
+    required this.requestNo,
     required this.name,
     required this.category,
     this.subCategory,
@@ -26,6 +27,7 @@ class RequestForm {
   });
 
   int id;
+  String? requestNo;
   String name;
   String category;
   dynamic subCategory;
@@ -51,6 +53,7 @@ class RequestForm {
 
   factory RequestForm.fromMap(Map<String, dynamic> json) => RequestForm(
         id: json["id"],
+        requestNo: json["request_no"],
         name: json["name"],
         category: json["category"],
         subCategory: json["sub_category"],
@@ -72,6 +75,7 @@ class RequestForm {
 
   Map<String, dynamic> toMap() => {
         "id": id,
+        "request_no": requestNo,
         "name": name,
         "category": category,
         "sub_category": subCategory,

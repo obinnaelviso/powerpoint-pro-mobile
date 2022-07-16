@@ -5,9 +5,9 @@ import 'package:powerpoint_pro/views/admin/panels/admin_categories_panel.dart';
 import 'package:powerpoint_pro/views/admin/panels/admin_forms_panel.dart';
 import 'package:powerpoint_pro/views/admin/panels/admin_home_panel.dart';
 import 'package:powerpoint_pro/views/admin/panels/admin_packages_panel.dart';
+import 'package:powerpoint_pro/views/user/panels/user_contact_panel.dart';
 import 'package:powerpoint_pro/views/user/panels/user_forms_panel.dart';
 import 'package:powerpoint_pro/views/user/panels/user_home_panel.dart';
-import 'package:powerpoint_pro/views/user/panels/user_packages_panel.dart';
 
 final kTextButtonStyle = TextButton.styleFrom(
   textStyle: const TextStyle(
@@ -26,7 +26,10 @@ final List<Map<String, dynamic>> kUserPanels = <Map<String, dynamic>>[
     "title": UserFormsPanel.title,
     "panel": const UserFormsPanel(),
   },
-  {"title": UserPackagesPanel.title, "panel": const UserPackagesPanel()}
+  {
+    "title": UserContactPanel.title,
+    "panel": const UserContactPanel(),
+  },
 ];
 
 const List<Map<String, dynamic>> kAdminPanels = <Map<String, dynamic>>[

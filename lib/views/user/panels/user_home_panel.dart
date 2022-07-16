@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:powerpoint_pro/helpers/constants.dart';
+import 'package:powerpoint_pro/models/request_form.dart';
 import 'package:powerpoint_pro/view_models/bank_accounts_view_model.dart';
+import 'package:powerpoint_pro/view_models/profile_view_model.dart';
 import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
 import 'package:powerpoint_pro/views/components/empty_screen.dart';
+import 'package:powerpoint_pro/views/components/order_details.dart';
 import 'package:powerpoint_pro/views/components/payment_modal.dart';
+import 'package:powerpoint_pro/views/components/status_label.dart';
+import 'package:powerpoint_pro/views/components/title_text.dart';
 import 'package:provider/provider.dart';
-
-import '../../../models/request_form.dart';
-import '../../components/status_label.dart';
 
 class UserHomePanel extends StatefulWidget {
   const UserHomePanel({Key? key}) : super(key: key);
-  static const String title = "Home";
+  static const String title = "Dashboard";
 
   @override
   State<UserHomePanel> createState() => _UserHomePanelState();
 }
 
 class _UserHomePanelState extends State<UserHomePanel> {
-  dynamic requestForms = [];
+  List<dynamic> requestForms = [];
+  String _name = "N/A";
 
   void setRequestForms(BuildContext context) async {
-    await context.read<RequestFormViewModel>().getAll();
+    await context.read<RequestFormViewModel>().getActive(isUser: true);
   }
 
   @override
@@ -29,6 +33,15 @@ class _UserHomePanelState extends State<UserHomePanel> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       setRequestForms(context);
+      loadProfile(context);
+    });
+  }
+
+  void loadProfile(BuildContext context) async {
+    final profileVm = context.read<ProfileViewModel>();
+    await profileVm.me();
+    setState(() {
+      _name = profileVm.user!.firstName;
     });
   }
 
@@ -41,8 +54,11 @@ class _UserHomePanelState extends State<UserHomePanel> {
       if (isLoading && (currentIndex == selectedListItem)) {
         return const CircularProgressIndicator();
       } else {
-        return ElevatedButton(
-          child: const Text('Pay'),
+        return TextButton(
+          child: const Text(
+            'Make Payment',
+            style: TextStyle(fontSize: kFS16),
+          ),
           onPressed: () async {
             selectedListItem = currentIndex;
             await Provider.of<BankAccountsViewModel>(context, listen: false)
@@ -51,7 +67,10 @@ class _UserHomePanelState extends State<UserHomePanel> {
               context: context,
               isScrollControlled: true,
               builder: (context) => SingleChildScrollView(
-                  child: PaymentModal(requestForms[currentIndex].id)),
+                  child: PaymentModal(
+                requestForms[currentIndex].id,
+                amount: requestForms[currentIndex].amountString,
+              )),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(20),
@@ -63,61 +82,100 @@ class _UserHomePanelState extends State<UserHomePanel> {
       }
     }
 
-    if (requestForms.isEmpty) {
-      return ModalProgressHUD(
-          inAsyncCall: Provider.of<RequestFormViewModel>(context).loading,
-          child: const EmptyScreen("There is nothing to display"));
-    } else {
-      return ModalProgressHUD(
-        inAsyncCall: Provider.of<RequestFormViewModel>(context).loading,
-        child: ListView.builder(
-          itemCount: requestForms.length,
-          itemBuilder: (context, index) {
-            final RequestForm requestForm = requestForms[index];
-            final String topic = requestForm.name;
-            final slidesCount = requestForm.slides;
-            final duration = requestForm.duration;
-            final String date = requestForm.createdAt.toString();
-            final String status = requestForm.status.title;
-            return Card(
-              child: InkWell(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: ListTile(
-                    leading: const Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Icon(
-                        Icons.pie_chart,
-                        size: 40,
-                        color: Colors.red,
-                      ),
-                    ),
-                    title: Text(topic),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            "No. of Slides: $slidesCount, Duration: $duration days"),
-                        Text("Date: $date"),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        StatusLabel(status)
-                      ],
-                    ),
-                    trailing: (status == "pending")
-                        ? displayPaymentButton(
-                            Provider.of<BankAccountsViewModel>(context).loading,
-                            index)
-                        : null,
-                  ),
-                ),
-              ),
-            );
-          },
+    return ModalProgressHUD(
+      inAsyncCall: Provider.of<RequestFormViewModel>(context).loading,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const Text("Welcome ",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: kFS18)),
+                Text(_name,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: kFS18,
+                        color: Colors.redAccent)),
+                const Text(" to your dashboard,",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: kFS18)),
+              ],
+            ),
+            const Divider(height: 30.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const TitleText("Active Orders"),
+                Text(
+                  requestForms.length.toString(),
+                  style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w700),
+                )
+              ],
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+                child: requestForms.isEmpty
+                    ? const EmptyScreen(
+                        "You currently have no active orders. \n Click the '+' button to make an order")
+                    : ListView.separated(
+                        itemBuilder: (context, index) {
+                          RequestForm requestForm = requestForms[index];
+                          return Card(
+                              child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  OrderDetails(
+                                      title: "Name: ",
+                                      description: requestForm.name),
+                                  const Divider(),
+                                  OrderDetails(
+                                      title: "Phone Number: ",
+                                      description: requestForm.phone),
+                                  OrderDetails(
+                                      title: "Email Address: ",
+                                      description: requestForm.email),
+                                  OrderDetails(
+                                      title: "Request No.: ",
+                                      description: requestForm.requestNo),
+                                  const SizedBox(height: 10.0),
+                                  StatusLabel(requestForm.status.title),
+                                ],
+                              ),
+                              subtitle: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(dateTimeFormat
+                                      .format(requestForm.createdAt)),
+                                  Visibility(
+                                    visible:
+                                        (requestForm.status.title == "pending"),
+                                    child: displayPaymentButton(
+                                        Provider.of<BankAccountsViewModel>(
+                                                context)
+                                            .loading,
+                                        index),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ));
+                        },
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 10.0),
+                        itemCount: requestForms.length))
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 }

@@ -3,11 +3,11 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:powerpoint_pro/helpers/constants.dart';
 import 'package:powerpoint_pro/view_models/categories_view_model.dart';
 import 'package:powerpoint_pro/view_models/packages_view_model.dart';
+import 'package:powerpoint_pro/views/components/alert_snack.dart';
 import 'package:powerpoint_pro/views/components/request_form_summary_modal.dart';
 import 'package:provider/provider.dart';
 
 import '../components/form_input.dart';
-import '../components/title_text.dart';
 
 class UserCreateFormScreen extends StatefulWidget {
   const UserCreateFormScreen({Key? key}) : super(key: key);
@@ -19,8 +19,7 @@ class UserCreateFormScreen extends StatefulWidget {
 }
 
 class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
-  int _duration = 1;
-  int _slides = 30;
+  String _duration = "1";
   final nameController = TextEditingController();
   final categoryController = TextEditingController();
   final subCategoryController = TextEditingController();
@@ -30,25 +29,34 @@ class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
   final emailController = TextEditingController();
   final locationController = TextEditingController();
   String _category = "";
-  List<String> categories = [];
+  List<String> _categories = [];
+  final List<String> _packages = [
+    "1 - 30",
+    "31 - 50",
+    "51 - 75",
+    "76 - 100",
+    "> 100"
+  ];
+  String _slides = "";
 
-  void setCategories(BuildContext context) async {
+  void loadCategories(BuildContext context) async {
     await context.read<CategoriesViewModel>().getAll();
     setState(() {
-      categories = context
+      _categories = context
           .read<CategoriesViewModel>()
           .categories
           .map((category) => category.title as String)
           .toList();
-      _category = categories[0];
+      _category = _categories[0];
     });
   }
 
   @override
   void initState() {
     super.initState();
+    _slides = _packages[0];
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      setCategories(context);
+      loadCategories(context);
     });
   }
 
@@ -56,10 +64,7 @@ class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const TitleText("Make a Powerpoint Request"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.red,
+        title: const Text("Make a Powerpoint Request"),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
@@ -93,7 +98,7 @@ class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
                           child: DropdownButton<String>(
                               isExpanded: true,
                               value: _category,
-                              items: categories.map<DropdownMenuItem<String>>(
+                              items: _categories.map<DropdownMenuItem<String>>(
                                 (String category) {
                                   return DropdownMenuItem<String>(
                                     value: category,
@@ -133,23 +138,29 @@ class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
                             style: TextStyle(fontSize: 16)),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: DropdownButton<int>(
-                              isExpanded: true,
-                              value: _slides,
-                              items: <int>[30, 50, 75, 100, 101]
-                                  .map<DropdownMenuItem<int>>(
-                                (int value) {
-                                  return DropdownMenuItem<int>(
-                                    value: value,
-                                    child: Text(value.toString()),
-                                  );
-                                },
-                              ).toList(),
-                              onChanged: (newValue) {
-                                setState(() {
-                                  _slides = (newValue == null) ? 0 : newValue;
-                                });
-                              }),
+                          child: (_packages.isEmpty)
+                              ? const SizedBox(
+                                  height: 5,
+                                  width: 5,
+                                  child: CircularProgressIndicator())
+                              : DropdownButton<String>(
+                                  isExpanded: true,
+                                  value: _slides,
+                                  items:
+                                      _packages.map<DropdownMenuItem<String>>(
+                                    (String slide) {
+                                      return DropdownMenuItem<String>(
+                                        value: slide,
+                                        child: Text(slide),
+                                      );
+                                    },
+                                  ).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _slides =
+                                          (newValue == null) ? "" : newValue;
+                                    });
+                                  }),
                         ),
                       ],
                     ),
@@ -157,7 +168,7 @@ class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
                       height: 10,
                     ),
                     Visibility(
-                      visible: true,
+                      visible: (_slides == "> 100"),
                       child: FormInput(
                         label: "Special Request",
                         type: TextInputType.number,
@@ -207,31 +218,31 @@ class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
                       child: Column(
                         children: [
                           RadioListTile(
-                            value: 1,
+                            value: "1",
                             groupValue: _duration,
-                            onChanged: (int? value) {
+                            onChanged: (String? value) {
                               setState(() {
-                                _duration = (value == null) ? 0 : value;
+                                _duration = (value == null) ? "" : value;
                               });
                             },
                             title: const Text('Within 24 hours'),
                           ),
                           RadioListTile(
-                            value: 3,
+                            value: "2",
                             groupValue: _duration,
-                            onChanged: (int? value) {
+                            onChanged: (String? value) {
                               setState(() {
-                                _duration = (value == null) ? 0 : value;
+                                _duration = (value == null) ? "" : value;
                               });
                             },
                             title: const Text('Within 1-3 days'),
                           ),
                           RadioListTile(
-                            value: 4,
+                            value: "4",
                             groupValue: _duration,
-                            onChanged: (int? value) {
+                            onChanged: (String? value) {
                               setState(() {
-                                _duration = (value == null) ? 0 : value;
+                                _duration = (value == null) ? "" : value;
                               });
                             },
                             title: const Text('Beyond 3 days'),
@@ -244,22 +255,28 @@ class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
+                        final slidesValue = (_slides.split(" ")[0] == '>')
+                            ? "101"
+                            : _slides.split(" ")[0];
+                        final packageVm = context.read<PackagesViewModel>();
                         var credentials = {
                           "name": nameController.text,
                           "category": _category,
                           "sub_category": subCategoryController.text,
                           "topic": topicController.text,
-                          "slides": _slides.toString(),
-                          "duration": _duration.toString(),
+                          "slides": (specialReqController.text == "")
+                              ? slidesValue
+                              : specialReqController.text,
+                          "duration": _duration,
                           "phone": phoneController.text,
                           "email": emailController.text,
                           "location": locationController.text
                         };
-                        await context.read<PackagesViewModel>().searchPackage(
-                              duration: _duration,
-                              slides: _slides,
-                            );
-                        var package = context.read<PackagesViewModel>().package;
+                        await packageVm.searchPackage(
+                          duration: _duration,
+                          slides: (slidesValue),
+                        );
+                        var package = packageVm.package;
                         if (package != null) {
                           showModalBottomSheet(
                               context: context,
@@ -275,6 +292,11 @@ class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
                                       credentials: credentials),
                                 );
                               });
+                        }
+                        if (packageVm.failure) {
+                          AlertSnack.showAlert(context,
+                              text: packageVm.message!,
+                              type: AlertSnackTypes.error);
                         }
                       },
                       child: const Text("Submit"),

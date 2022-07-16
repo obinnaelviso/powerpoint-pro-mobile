@@ -75,7 +75,7 @@ class ViewOrderModal extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            requestForm.subCategory ?? "",
+                            requestForm.subCategory ?? "N/A",
                             style: const TextStyle(fontSize: 16),
                           ),
                         ),
@@ -95,24 +95,6 @@ class ViewOrderModal extends StatelessWidget {
                         ),
                       ),
                     )
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Card(
-                        child: ListTile(
-                          title: const Text(
-                            "Description",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            requestForm.description ?? "N/A",
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
                 Row(
