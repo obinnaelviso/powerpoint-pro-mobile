@@ -69,6 +69,8 @@ class _UserMainScreenState extends State<UserMainScreen> {
                                         .read<AuthViewModel>()
                                         .logout();
                                     if (context.read<AuthViewModel>().success) {
+                                      Navigator.popUntil(
+                                          context, (route) => route.isFirst);
                                       Navigator.pushReplacementNamed(
                                           context, LoginScreen.route);
                                     }

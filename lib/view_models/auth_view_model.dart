@@ -20,12 +20,16 @@ class AuthViewModel extends BaseViewModel {
     credentials["device_name"] = await _getDeviceInfo();
     var response = await api.post("/login", credentials);
     if (response is Success) {
+      setFailure(false);
+      setSuccess(true);
       if (response.data != null) {
         setUser(response.data!["user"] as Map<String, dynamic>);
         setToken(response.data!["token"]);
       }
     }
     if (response is Failure) {
+      setFailure(true);
+      setSuccess(false);
       setErrors(response.data);
     }
     setLoading(false);

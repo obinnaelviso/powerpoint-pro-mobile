@@ -5,6 +5,7 @@ import 'package:powerpoint_pro/view_models/auth_view_model.dart';
 import 'package:powerpoint_pro/view_models/bank_accounts_view_model.dart';
 import 'package:powerpoint_pro/view_models/categories_view_model.dart';
 import 'package:powerpoint_pro/view_models/profile_view_model.dart';
+import 'package:powerpoint_pro/views/admin/admin_transaction_history_screen.dart';
 import 'package:powerpoint_pro/views/auth/login_screen.dart';
 import 'package:powerpoint_pro/views/components/alert_snack.dart';
 import 'package:powerpoint_pro/views/components/bottom_form_modal.dart';
@@ -55,6 +56,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                       onPressed: () async {
                         await context.read<AuthViewModel>().logout();
                         if (context.read<AuthViewModel>().success) {
+                          Navigator.popUntil(context, (route) => route.isFirst);
                           Navigator.pushReplacementNamed(
                               context, LoginScreen.route);
                         }
@@ -137,6 +139,13 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
       },
       icon: const Icon(Icons.add_circle_outline),
       tooltip: "Add new Category",
+    );
+    final Widget transactionHistoryAction = IconButton(
+      onPressed: () {
+        Navigator.pushNamed(context, AdminTransactionHistoryScreen.route);
+      },
+      icon: const Icon(Icons.description),
+      tooltip: "Transaction History",
     );
     final Widget addBankAccountAction = IconButton(
       onPressed: () async {
@@ -243,7 +252,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                 title: Text(kAdminPanels[1]["title"]),
                 onTap: () {
                   gotoPanel(context, 1);
-                  setAppBarActions(context);
+                  setAppBarActions(context,
+                      appbarActions: [transactionHistoryAction]);
                 }),
             // Packages
             ListTile(

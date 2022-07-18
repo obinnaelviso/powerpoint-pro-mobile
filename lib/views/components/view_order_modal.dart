@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:powerpoint_pro/helpers/constants.dart';
 import 'package:powerpoint_pro/models/request_form.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ViewOrderModal extends StatelessWidget {
   final RequestForm requestForm;
 
   const ViewOrderModal(this.requestForm, {Key? key}) : super(key: key);
-
-  // Future<void> downloadFile(String path, String name) async {
-  //   final appStorage = await getApplicationDocumentsDirectory();
-  //   final file = File('${appStorage.path}/$name');
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -144,8 +140,10 @@ class ViewOrderModal extends StatelessWidget {
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 )
                               : ElevatedButton(
-                                  onPressed: () {
-                                    // await downloadFile(requestForm.receiptUrl);
+                                  onPressed: () async {
+                                    await launchUrl(
+                                        Uri.parse(requestForm.receiptUrl),
+                                        mode: LaunchMode.externalApplication);
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:powerpoint_pro/models/package.dart';
+import 'package:powerpoint_pro/helpers/constants.dart';
 import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
 import 'package:powerpoint_pro/views/components/title_text.dart';
 import 'package:powerpoint_pro/views/user/user_main_screen.dart';
@@ -8,11 +8,11 @@ import 'package:provider/provider.dart';
 class RequestFormSummaryModal extends StatelessWidget {
   final Map<String, dynamic> credentials;
 
-  final Package package;
+  final String amount;
   const RequestFormSummaryModal({
     Key? key,
     required this.credentials,
-    required this.package,
+    required this.amount,
   }) : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class RequestFormSummaryModal extends StatelessWidget {
           const TitleText("Below is the cost of your order:"),
           const SizedBox(height: 20),
           Text(
-            package.amountString!,
+            "$kCurrency$amount",
             style: const TextStyle(
                 color: Colors.red, fontSize: 28.0, fontWeight: FontWeight.bold),
           ),

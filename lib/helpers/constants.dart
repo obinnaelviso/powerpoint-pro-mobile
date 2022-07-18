@@ -55,4 +55,6 @@ const kAppTitle = "Powerpoint Pro";
 const double kFS16 = 16.0;
 const double kFS18 = 18.0;
 
+const String kCurrency = "₦";
+
 enum ResetPasswordSteps { email, otp, password }

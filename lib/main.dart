@@ -7,6 +7,7 @@ import 'package:powerpoint_pro/view_models/packages_view_model.dart';
 import 'package:powerpoint_pro/view_models/profile_view_model.dart';
 import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
 import 'package:powerpoint_pro/views/admin/admin_main_screen.dart';
+import 'package:powerpoint_pro/views/admin/admin_transaction_history_screen.dart';
 import 'package:powerpoint_pro/views/auth/login_screen.dart';
 import 'package:powerpoint_pro/views/auth/registration_screen.dart';
 import 'package:powerpoint_pro/views/auth/reset_password_screen.dart';
@@ -74,6 +75,8 @@ class _MyAppState extends State<MyApp> {
           UserMainScreen.route: (context) => const UserMainScreen(),
           UserCreateFormScreen.route: (context) => const UserCreateFormScreen(),
           AdminMainScreen.route: (context) => const AdminMainScreen(),
+          AdminTransactionHistoryScreen.route: (context) =>
+              const AdminTransactionHistoryScreen(),
         });
   }
 }

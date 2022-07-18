@@ -61,10 +61,6 @@ class _AdminPackagesPanelState extends State<AdminPackagesPanel> {
             itemBuilder: (lvContext, index) {
               final Package _package = _packages[index];
               final String? _title = _package.title;
-              final String? _durationRange =
-                  "${_package.minDuration} - ${_package.maxDuration}";
-              final String? _slidesRange =
-                  "${_package.minSlides} - ${_package.maxSlides}";
               final String? _amount = _package.amount;
               final String? _amountString = _package.amountString;
               final _amountController = TextEditingController();
@@ -78,19 +74,6 @@ class _AdminPackagesPanelState extends State<AdminPackagesPanel> {
                       style: const TextStyle(color: Colors.red),
                     ),
                   ]),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(children: [
-                        const Text("Slides: "),
-                        Text(_slidesRange ?? "")
-                      ]),
-                      Row(children: [
-                        const Text("Duration: "),
-                        Text(_durationRange ?? "")
-                      ]),
-                    ],
-                  ),
                   trailing: PopupMenuButton<FormOptions>(
                     onSelected: (FormOptions item) async {
                       final packagesVm = context.read<PackagesViewModel>();
