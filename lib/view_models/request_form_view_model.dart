@@ -119,7 +119,6 @@ class RequestFormViewModel extends BaseViewModel {
 
     if (response is Success) {
       getAll();
-      setMessage("Payment receipt uploaded successfully. Awaiting approval!");
       setSuccess(true);
       setFailure(false);
     }
