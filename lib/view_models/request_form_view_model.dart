@@ -226,29 +226,6 @@ class RequestFormViewModel extends BaseViewModel {
     setMessage(response.message ?? "");
   }
 
-  Future<void> download(String downloadUrl, File file) async {
-    setLoading(true);
-    setMessage("");
-    setErrors({});
-
-    var response = await api.download(downloadUrl, file);
-
-    if (response is Success) {
-      await getAll(isUser: false);
-      setSuccess(true);
-      setFailure(false);
-    }
-
-    if (response is Failure) {
-      setErrors(response.data);
-      setSuccess(false);
-      setFailure(true);
-    }
-
-    setLoading(false);
-    setMessage(response.message ?? "");
-  }
-
   Future<void> delete(int requestFormId) async {
     setLoading(true);
     setMessage("");

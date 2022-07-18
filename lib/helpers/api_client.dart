@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:powerpoint_pro/helpers/api_status.dart';
 
@@ -43,31 +44,20 @@ class ApiClient {
         req.headers.addAll(_headers);
         req.files.add(await http.MultipartFile.fromPath("file", file.path));
         return await req.send();
-        // var response = await req.send();
-      });
-
-  Future<dynamic> download(String path, File file) async =>
-      await _makeRequest(() async {
-        final httpClient = http.Client();
-        final req = http.Request('GET', getRoute(path, rawUrl: true));
-        final res = await httpClient.send(req);
       });
 
   Future<dynamic> _makeRequest(Future<dynamic> Function() serverRequest) async {
     try {
       var response = await serverRequest();
       int statusCode = response.statusCode;
-      Map<String, dynamic> data;
+      Map<String, dynamic> data = {};
+      dynamic body;
       if (response is http.StreamedResponse) {
-        data = {};
+        body = await response.stream.bytesToString();
       } else {
-        if (response.body != null) {
-          print(response.body);
-          data = jsonDecode(response.body);
-        } else {
-          data = {};
-        }
+        body = response.body;
       }
+      data = jsonDecode(body);
 
       switch (statusCode) {
         case 200:
@@ -96,7 +86,9 @@ class ApiClient {
     } on FormatException {
       return Failure("Invalid JSON", {});
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return Failure("Unknown error", {});
     }
   }
