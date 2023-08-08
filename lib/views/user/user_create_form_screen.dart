@@ -70,7 +70,7 @@ class _UserCreateFormScreenState extends State<UserCreateFormScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       loadCategories(context);
       loadPackages(context);
     });

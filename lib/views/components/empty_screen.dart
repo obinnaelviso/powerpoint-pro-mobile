@@ -25,7 +25,7 @@ class EmptyScreen extends StatelessWidget {
               Text(
                 caption,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: Colors.black54),
+                style: const TextStyle(fontSize: 18, color: Colors.black54),
               ),
             ],
           ),

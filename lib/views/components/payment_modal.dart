@@ -124,7 +124,7 @@ class _PaymentModalState extends State<PaymentModal> {
             style: ElevatedButton.styleFrom(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                primary: Colors.black87),
+                backgroundColor: Colors.black87),
           ),
           Text(
             selectedFilePath,
@@ -144,7 +144,7 @@ class _PaymentModalState extends State<PaymentModal> {
                     },
                     child: const Text("Cancel"),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.black38,
+                      backgroundColor: Colors.black38,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)),

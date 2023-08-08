@@ -75,7 +75,7 @@ class _AdminFormsPanelState extends State<AdminFormsPanel> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setRequestForms();
     });
   }

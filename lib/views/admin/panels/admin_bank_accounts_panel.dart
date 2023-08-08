@@ -43,7 +43,7 @@ class _AdminBankAccountsPanelState extends State<AdminBankAccountsPanel> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setBankAccounts();
     });
   }

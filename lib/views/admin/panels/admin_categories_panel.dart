@@ -45,7 +45,7 @@ class _AdminCategoriesPanelState extends State<AdminCategoriesPanel> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setCategories();
     });
   }

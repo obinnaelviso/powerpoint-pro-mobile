@@ -37,7 +37,6 @@ class PackagesViewModel extends BaseViewModel {
     setLoading(true);
     setMessage("");
     setErrors({});
-    print("getting package");
     var response =
         await api.get("/packages/search?duration=$duration&slides=$slides");
     if (response is Success) {
@@ -46,7 +45,6 @@ class PackagesViewModel extends BaseViewModel {
 
     if (response is Failure) {
       setErrors(response.data);
-      print(response.data);
     }
     setMessage(response.message ?? "");
     setLoading(false);
