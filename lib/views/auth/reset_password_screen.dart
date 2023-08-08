@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:powerpoint_pro/helpers/constants.dart';
-import 'package:powerpoint_pro/view_models/auth_view_model.dart';
-import 'package:powerpoint_pro/views/auth/login_screen.dart';
-import 'package:powerpoint_pro/views/auth/panels/change_password_panel.dart';
-import 'package:powerpoint_pro/views/auth/panels/email_otp_panel.dart';
-import 'package:powerpoint_pro/views/auth/panels/reset_password_panel.dart';
-import 'package:powerpoint_pro/views/components/title_text.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/view_models/auth_view_model.dart';
+import 'package:project_ppt_pro/views/auth/login_screen.dart';
+import 'package:project_ppt_pro/views/auth/panels/change_password_panel.dart';
+import 'package:project_ppt_pro/views/auth/panels/email_otp_panel.dart';
+import 'package:project_ppt_pro/views/auth/panels/reset_password_panel.dart';
+import 'package:project_ppt_pro/views/components/title_text.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<ScaffoldState> rpKey = GlobalKey<ScaffoldState>();

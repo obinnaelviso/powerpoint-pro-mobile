@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:powerpoint_pro/helpers/constants.dart';
-import 'package:powerpoint_pro/models/package.dart';
-import 'package:powerpoint_pro/view_models/categories_view_model.dart';
-import 'package:powerpoint_pro/view_models/packages_view_model.dart';
-import 'package:powerpoint_pro/views/components/alert_snack.dart';
-import 'package:powerpoint_pro/views/components/request_form_summary_modal.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/models/package.dart';
+import 'package:project_ppt_pro/view_models/categories_view_model.dart';
+import 'package:project_ppt_pro/view_models/packages_view_model.dart';
+import 'package:project_ppt_pro/views/components/alert_snack.dart';
+import 'package:project_ppt_pro/views/components/request_form_summary_modal.dart';
 import 'package:provider/provider.dart';
 
 import '../components/form_input.dart';

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:powerpoint_pro/models/status.dart';
+import 'package:project_ppt_pro/models/status.dart';
 
 class Package {
   Package({

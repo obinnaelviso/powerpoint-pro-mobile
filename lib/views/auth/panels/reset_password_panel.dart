@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:powerpoint_pro/view_models/auth_view_model.dart';
-import 'package:powerpoint_pro/views/auth/reset_password_screen.dart';
-import 'package:powerpoint_pro/views/components/alert_snack.dart';
-import 'package:powerpoint_pro/views/components/form_input.dart';
+import 'package:project_ppt_pro/view_models/auth_view_model.dart';
+import 'package:project_ppt_pro/views/auth/reset_password_screen.dart';
+import 'package:project_ppt_pro/views/components/alert_snack.dart';
+import 'package:project_ppt_pro/views/components/form_input.dart';
 import 'package:provider/provider.dart';
 
 class ResetPasswordPanel extends StatelessWidget {

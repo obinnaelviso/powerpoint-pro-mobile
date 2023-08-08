@@ -1,8 +1,8 @@
 import 'dart:collection';
 
-import 'package:powerpoint_pro/helpers/api_status.dart';
-import 'package:powerpoint_pro/models/bank_account.dart';
-import 'package:powerpoint_pro/view_models/base_view_model.dart';
+import 'package:project_ppt_pro/helpers/api_status.dart';
+import 'package:project_ppt_pro/models/bank_account.dart';
+import 'package:project_ppt_pro/view_models/base_view_model.dart';
 
 class BankAccountsViewModel extends BaseViewModel {
   List<BankAccount> _bankAccounts = [];

@@ -8,6 +8,7 @@ class Success {
 class Failure {
   String? message;
   Map<String, dynamic> data = {};
+  int errorCode;
 
-  Failure(this.message, this.data);
+  Failure(this.message, this.data, {this.errorCode = 400});
 }

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:powerpoint_pro/helpers/constants.dart';
-import 'package:powerpoint_pro/view_models/admin_app_bar_view_model.dart';
-import 'package:powerpoint_pro/view_models/auth_view_model.dart';
-import 'package:powerpoint_pro/view_models/bank_accounts_view_model.dart';
-import 'package:powerpoint_pro/view_models/categories_view_model.dart';
-import 'package:powerpoint_pro/view_models/profile_view_model.dart';
-import 'package:powerpoint_pro/views/admin/admin_transaction_history_screen.dart';
-import 'package:powerpoint_pro/views/auth/login_screen.dart';
-import 'package:powerpoint_pro/views/components/alert_snack.dart';
-import 'package:powerpoint_pro/views/components/bottom_form_modal.dart';
-import 'package:powerpoint_pro/views/components/error_text.dart';
-import 'package:powerpoint_pro/views/components/form_input.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/view_models/admin_app_bar_view_model.dart';
+import 'package:project_ppt_pro/view_models/auth_view_model.dart';
+import 'package:project_ppt_pro/view_models/bank_accounts_view_model.dart';
+import 'package:project_ppt_pro/view_models/categories_view_model.dart';
+import 'package:project_ppt_pro/view_models/profile_view_model.dart';
+import 'package:project_ppt_pro/views/admin/admin_transaction_history_screen.dart';
+import 'package:project_ppt_pro/views/auth/login_screen.dart';
+import 'package:project_ppt_pro/views/components/alert_snack.dart';
+import 'package:project_ppt_pro/views/components/bottom_form_modal.dart';
+import 'package:project_ppt_pro/views/components/error_text.dart';
+import 'package:project_ppt_pro/views/components/form_input.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

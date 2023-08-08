@@ -1,6 +1,6 @@
-import 'package:powerpoint_pro/helpers/api_status.dart';
-import 'package:powerpoint_pro/models/user.dart';
-import 'package:powerpoint_pro/view_models/base_view_model.dart';
+import 'package:project_ppt_pro/helpers/api_status.dart';
+import 'package:project_ppt_pro/models/user.dart';
+import 'package:project_ppt_pro/view_models/base_view_model.dart';
 
 class ProfileViewModel extends BaseViewModel {
   User? _user;

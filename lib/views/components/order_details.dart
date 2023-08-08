@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:powerpoint_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
 
 class OrderDetails extends StatelessWidget {
   const OrderDetails({

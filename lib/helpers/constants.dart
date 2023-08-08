@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:powerpoint_pro/views/admin/panels/admin_bank_accounts_panel.dart';
-import 'package:powerpoint_pro/views/admin/panels/admin_categories_panel.dart';
-import 'package:powerpoint_pro/views/admin/panels/admin_forms_panel.dart';
-import 'package:powerpoint_pro/views/admin/panels/admin_home_panel.dart';
-import 'package:powerpoint_pro/views/admin/panels/admin_packages_panel.dart';
-import 'package:powerpoint_pro/views/user/panels/user_contact_panel.dart';
-import 'package:powerpoint_pro/views/user/panels/user_forms_panel.dart';
-import 'package:powerpoint_pro/views/user/panels/user_home_panel.dart';
+import 'package:project_ppt_pro/views/admin/panels/admin_bank_accounts_panel.dart';
+import 'package:project_ppt_pro/views/admin/panels/admin_categories_panel.dart';
+import 'package:project_ppt_pro/views/admin/panels/admin_forms_panel.dart';
+import 'package:project_ppt_pro/views/admin/panels/admin_home_panel.dart';
+import 'package:project_ppt_pro/views/admin/panels/admin_packages_panel.dart';
+import 'package:project_ppt_pro/views/user/panels/user_contact_panel.dart';
+import 'package:project_ppt_pro/views/user/panels/user_forms_panel.dart';
+import 'package:project_ppt_pro/views/user/panels/user_home_panel.dart';
 
 final kTextButtonStyle = TextButton.styleFrom(
   textStyle: const TextStyle(
@@ -51,7 +51,7 @@ enum FormOptions { delete, approve, reject, cancel, complete, revert, edit }
 final DateFormat dateTimeFormat = DateFormat('dd/MM/yyyy hh:mm a');
 final DateFormat dateFormat = DateFormat('dd/MM/yyyy');
 
-const kAppTitle = "Powerpoint Pro";
+const kAppTitle = "Project PPT Pro";
 const double kFS16 = 16.0;
 const double kFS18 = 18.0;
 

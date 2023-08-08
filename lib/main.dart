@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:powerpoint_pro/view_models/admin_app_bar_view_model.dart';
-import 'package:powerpoint_pro/view_models/auth_view_model.dart';
-import 'package:powerpoint_pro/view_models/bank_accounts_view_model.dart';
-import 'package:powerpoint_pro/view_models/categories_view_model.dart';
-import 'package:powerpoint_pro/view_models/packages_view_model.dart';
-import 'package:powerpoint_pro/view_models/profile_view_model.dart';
-import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
-import 'package:powerpoint_pro/views/admin/admin_main_screen.dart';
-import 'package:powerpoint_pro/views/admin/admin_transaction_history_screen.dart';
-import 'package:powerpoint_pro/views/auth/login_screen.dart';
-import 'package:powerpoint_pro/views/auth/registration_screen.dart';
-import 'package:powerpoint_pro/views/auth/reset_password_screen.dart';
-import 'package:powerpoint_pro/views/splash_screen.dart';
-import 'package:powerpoint_pro/views/user/user_create_form_screen.dart';
-import 'package:powerpoint_pro/views/user/user_main_screen.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/view_models/admin_app_bar_view_model.dart';
+import 'package:project_ppt_pro/view_models/auth_view_model.dart';
+import 'package:project_ppt_pro/view_models/bank_accounts_view_model.dart';
+import 'package:project_ppt_pro/view_models/categories_view_model.dart';
+import 'package:project_ppt_pro/view_models/packages_view_model.dart';
+import 'package:project_ppt_pro/view_models/profile_view_model.dart';
+import 'package:project_ppt_pro/view_models/request_form_view_model.dart';
+import 'package:project_ppt_pro/views/admin/admin_main_screen.dart';
+import 'package:project_ppt_pro/views/admin/admin_transaction_history_screen.dart';
+import 'package:project_ppt_pro/views/auth/login_screen.dart';
+import 'package:project_ppt_pro/views/auth/registration_screen.dart';
+import 'package:project_ppt_pro/views/auth/reset_password_screen.dart';
+import 'package:project_ppt_pro/views/splash_screen.dart';
+import 'package:project_ppt_pro/views/user/user_create_form_screen.dart';
+import 'package:project_ppt_pro/views/user/user_main_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -44,7 +45,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Powerpoint pro',
+        title: kAppTitle,
         theme: ThemeData(
           primarySwatch: Colors.red,
           elevatedButtonTheme: ElevatedButtonThemeData(

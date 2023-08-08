@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:powerpoint_pro/helpers/api_client.dart';
+import 'package:project_ppt_pro/helpers/api_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../helpers/api_client.dart';
 
 class BaseViewModel with ChangeNotifier {
   ApiClient api = ApiClient();

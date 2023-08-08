@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:powerpoint_pro/helpers/api_status.dart';
+import 'package:project_ppt_pro/helpers/api_status.dart';
 
 //Singleton class
 class ApiClient {

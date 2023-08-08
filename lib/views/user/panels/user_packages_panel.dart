@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:powerpoint_pro/view_models/packages_view_model.dart';
-import 'package:powerpoint_pro/views/components/title_text.dart';
+import 'package:project_ppt_pro/view_models/packages_view_model.dart';
+import 'package:project_ppt_pro/views/components/title_text.dart';
 import 'package:provider/provider.dart';
 
 class UserPackagesPanel extends StatelessWidget {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:powerpoint_pro/helpers/constants.dart';
-import 'package:powerpoint_pro/view_models/auth_view_model.dart';
-import 'package:powerpoint_pro/views/components/error_text.dart';
-import 'package:powerpoint_pro/views/components/title_text.dart';
-import 'package:powerpoint_pro/views/user/user_main_screen.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/view_models/auth_view_model.dart';
+import 'package:project_ppt_pro/views/components/error_text.dart';
+import 'package:project_ppt_pro/views/components/title_text.dart';
+import 'package:project_ppt_pro/views/user/user_main_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../components/form_input.dart';

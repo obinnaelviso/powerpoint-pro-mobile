@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:powerpoint_pro/view_models/bank_accounts_view_model.dart';
-import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
-import 'package:powerpoint_pro/views/components/alert_snack.dart';
-import 'package:powerpoint_pro/views/components/title_text.dart';
+import 'package:project_ppt_pro/view_models/bank_accounts_view_model.dart';
+import 'package:project_ppt_pro/view_models/request_form_view_model.dart';
+import 'package:project_ppt_pro/views/components/alert_snack.dart';
+import 'package:project_ppt_pro/views/components/title_text.dart';
 import 'package:provider/provider.dart';
 
 class PaymentModal extends StatefulWidget {

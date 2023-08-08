@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:powerpoint_pro/helpers/constants.dart';
-import 'package:powerpoint_pro/view_models/auth_view_model.dart';
-import 'package:powerpoint_pro/view_models/request_form_view_model.dart';
-import 'package:powerpoint_pro/views/auth/login_screen.dart';
-import 'package:powerpoint_pro/views/user/user_create_form_screen.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/view_models/auth_view_model.dart';
+import 'package:project_ppt_pro/view_models/request_form_view_model.dart';
+import 'package:project_ppt_pro/views/auth/login_screen.dart';
+import 'package:project_ppt_pro/views/user/user_create_form_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,10 +30,65 @@ class _UserMainScreenState extends State<UserMainScreen> {
     }
   }
 
+  Future<bool> _handlePermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await _geolocatorPlatform.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      _updatePositionList(
+        _PositionItemType.log,
+        _kLocationServicesDisabledMessage,
+      );
+
+      return false;
+    }
+
+    permission = await _geolocatorPlatform.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await _geolocatorPlatform.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        _updatePositionList(
+          _PositionItemType.log,
+          _kPermissionDeniedMessage,
+        );
+
+        return false;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      _updatePositionList(
+        _PositionItemType.log,
+        _kPermissionDeniedForeverMessage,
+      );
+
+      return false;
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    _updatePositionList(
+      _PositionItemType.log,
+      _kPermissionGrantedMessage,
+    );
+    return true;
+  }
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       loadRequestFormsData(context);
     });
   }
@@ -43,9 +98,12 @@ class _UserMainScreenState extends State<UserMainScreen> {
     return Scaffold(
       appBar: AppBar(
           title: Text("${kUserPanels[_selectedIndex]["title"]}"),
+          leadingWidth: 75.0,
           leading: const Padding(
             padding: EdgeInsets.all(5.0),
-            child: Image(image: AssetImage("assets/images/logo64.png")),
+            child: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Image(image: AssetImage("assets/images/logo64.png"))),
           ),
           actions: [
             PopupMenuButton<int>(

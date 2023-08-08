@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:powerpoint_pro/helpers/api_client.dart';
-import 'package:powerpoint_pro/helpers/constants.dart';
-import 'package:powerpoint_pro/views/admin/admin_main_screen.dart';
-import 'package:powerpoint_pro/views/auth/login_screen.dart';
-import 'package:powerpoint_pro/views/user/user_main_screen.dart';
+import 'package:project_ppt_pro/helpers/api_client.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/views/admin/admin_main_screen.dart';
+import 'package:project_ppt_pro/views/auth/login_screen.dart';
+import 'package:project_ppt_pro/views/user/user_main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -58,10 +58,10 @@ class _SplashScreenState extends State<SplashScreen> {
             height: 100,
           ),
           const SizedBox(height: 20.0),
-          const Center(
+          Center(
               child: Text(
-            "POWERPOINT PRO",
-            style: TextStyle(
+            kAppTitle.toUpperCase(),
+            style: const TextStyle(
                 fontWeight: FontWeight.w900,
                 color: Colors.black87,
                 fontSize: kFS18),

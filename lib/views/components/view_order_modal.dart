@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:powerpoint_pro/helpers/constants.dart';
-import 'package:powerpoint_pro/models/request_form.dart';
-import 'package:powerpoint_pro/views/components/title_text.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/models/request_form.dart';
+import 'package:project_ppt_pro/views/components/title_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ViewOrderModal extends StatelessWidget {

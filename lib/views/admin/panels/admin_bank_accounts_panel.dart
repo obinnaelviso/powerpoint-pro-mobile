@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:powerpoint_pro/helpers/constants.dart';
-import 'package:powerpoint_pro/models/bank_account.dart';
-import 'package:powerpoint_pro/view_models/bank_accounts_view_model.dart';
-import 'package:powerpoint_pro/views/components/alert_snack.dart';
-import 'package:powerpoint_pro/views/components/bottom_form_modal.dart';
-import 'package:powerpoint_pro/views/components/confirm_box.dart';
-import 'package:powerpoint_pro/views/components/empty_screen.dart';
-import 'package:powerpoint_pro/views/components/form_input.dart';
+import 'package:project_ppt_pro/helpers/constants.dart';
+import 'package:project_ppt_pro/models/bank_account.dart';
+import 'package:project_ppt_pro/view_models/bank_accounts_view_model.dart';
+import 'package:project_ppt_pro/views/components/alert_snack.dart';
+import 'package:project_ppt_pro/views/components/bottom_form_modal.dart';
+import 'package:project_ppt_pro/views/components/confirm_box.dart';
+import 'package:project_ppt_pro/views/components/empty_screen.dart';
+import 'package:project_ppt_pro/views/components/form_input.dart';
 import 'package:provider/provider.dart';
 
 class AdminBankAccountsPanel extends StatefulWidget {
